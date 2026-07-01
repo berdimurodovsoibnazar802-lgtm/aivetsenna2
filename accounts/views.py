@@ -22,7 +22,7 @@ def _validate_password(pw):
         errors.append('Parolda kamida bitta kichik harf bo\'lishi kerak.')
     if not re.search(r'[0-9]', pw):
         errors.append('Parolda kamida bitta raqam bo\'lishi kerak.')
-    if not re.search(r'[^A-Za-z0-9]', pw):
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/]', pw):
         errors.append('Parolda kamida bitta maxsus belgi bo\'lishi kerak.')
     return errors
 
