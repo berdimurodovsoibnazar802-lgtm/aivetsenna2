@@ -6,7 +6,9 @@ SECRET_KEY = 'django-insecure-alvitsenna-dev-key-change-in-production-xyz123'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ngrok-free.dev']
+
+CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.dev']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

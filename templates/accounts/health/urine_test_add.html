@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Siydik tahlili — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">SIYDIK TAHLILI</p>
+    <h1 class="page-header__title">Natija kiriting</h1>
+  </div>
+
+  <form method="post" class="glass-card">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="form-label">Sana *</label>
+      <input type="date" name="date" value="{{ post.date }}">
+      {% if errors.date %}<p class="form-error">{{ errors.date }}</p>{% endif %}
+    </div>
+
+    <p class="section-label" style="margin-top:0.25rem;">Fizik xususiyatlar</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div class="form-group">
+        <label class="form-label">Rangi</label>
+        <input type="text" name="color" value="{{ post.color }}" placeholder="Sariq, och sariq...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tiniqligi</label>
+        <select name="clarity">
+          <option value="">— tanlang —</option>
+          <option value="clear" {% if post.clarity == 'clear' %}selected{% endif %}>Tiniq</option>
+          <option value="slightly_turbid" {% if post.clarity == 'slightly_turbid' %}selected{% endif %}>Biroz loyqa</option>
+          <option value="turbid" {% if post.clarity == 'turbid' %}selected{% endif %}>Loyqa</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">pH</label>
+        <input type="number" name="ph" step="0.1" min="4" max="9" value="{{ post.ph }}" placeholder="5.0–8.0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Solishtirma og'irligi</label>
+        <input type="number" name="specific_gravity" step="0.001" min="1.001" max="1.040" value="{{ post.specific_gravity }}" placeholder="1.010–1.025">
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:0.25rem;">Kimyoviy ko'rsatkichlar</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      {% for field, label in field_labels %}{% endfor %}
+      <div class="form-group">
+        <label class="form-label">Oqsil</label>
+        <select name="protein">
+          <option value="negative" {% if post.protein == 'negative' or not post.protein %}selected{% endif %}>Manfiy</option>
+          <option value="trace"    {% if post.protein == 'trace' %}selected{% endif %}>Iz</option>
+          <option value="positive" {% if post.protein == 'positive' %}selected{% endif %}>Musbat</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Glukoza</label>
+        <select name="glucose">
+          <option value="negative" {% if post.glucose == 'negative' or not post.glucose %}selected{% endif %}>Manfiy</option>
+          <option value="trace"    {% if post.glucose == 'trace' %}selected{% endif %}>Iz</option>
+          <option value="positive" {% if post.glucose == 'positive' %}selected{% endif %}>Musbat</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ketonlar</label>
+        <select name="ketones">
+          <option value="negative" {% if post.ketones == 'negative' or not post.ketones %}selected{% endif %}>Manfiy</option>
+          <option value="trace"    {% if post.ketones == 'trace' %}selected{% endif %}>Iz</option>
+          <option value="positive" {% if post.ketones == 'positive' %}selected{% endif %}>Musbat</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Qon</label>
+        <select name="blood">
+          <option value="negative" {% if post.blood == 'negative' or not post.blood %}selected{% endif %}>Manfiy</option>
+          <option value="trace"    {% if post.blood == 'trace' %}selected{% endif %}>Iz</option>
+          <option value="positive" {% if post.blood == 'positive' %}selected{% endif %}>Musbat</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Leykotsitlar</label>
+        <select name="leukocytes">
+          <option value="negative" {% if post.leukocytes == 'negative' or not post.leukocytes %}selected{% endif %}>Manfiy</option>
+          <option value="trace"    {% if post.leukocytes == 'trace' %}selected{% endif %}>Iz</option>
+          <option value="positive" {% if post.leukocytes == 'positive' %}selected{% endif %}>Musbat</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nitritlar</label>
+        <select name="nitrites">
+          <option value="negative" {% if post.nitrites == 'negative' or not post.nitrites %}selected{% endif %}>Manfiy</option>
+          <option value="positive" {% if post.nitrites == 'positive' %}selected{% endif %}>Musbat</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Izoh</label>
+      <textarea name="notes" rows="2" placeholder="Qo'shimcha ma'lumotlar...">{{ post.notes }}</textarea>
+    </div>
+
+    <button type="submit" class="btn-primary">Saqlash</button>
+  </form>
+
+</div>
+{% endblock %}

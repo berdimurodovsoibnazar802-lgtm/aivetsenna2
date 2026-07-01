@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Qon tahlillari — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">QON TAHLILI</p>
+    <h1 class="page-header__title">Natijalar</h1>
+    <p class="page-header__sub">Barcha qon tahlili natijalari</p>
+  </div>
+
+  <a href="{% url 'blood_test_add' %}" class="btn-primary" style="margin-bottom:1rem;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Yangi tahlil qo'shish
+  </a>
+
+  {% if tests %}
+  <div class="glass-card">
+    {% for t in tests %}
+    <a href="{% url 'blood_test_detail' t.pk %}" style="text-decoration:none; display:block;">
+      <div class="health-item">
+        <div style="flex:1;">
+          <div class="health-item__title">Qon tahlili</div>
+          <div class="health-item__sub">
+            {% if t.hemoglobin %}Hb: {{ t.hemoglobin }} g/dL{% endif %}
+            {% if t.wbc %} · WBC: {{ t.wbc }}{% endif %}
+            {% if t.crp %} · CRP: {{ t.crp }}{% endif %}
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <span class="health-item__date">{{ t.date }}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="glass-card">
+    <div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2C6 8 4 12 4 15a8 8 0 0016 0c0-3-2-7-8-13z"/>
+      </svg>
+      <p>Hali qon tahlili natijalari yo'q.<br>Birinchi natijani qo'shish uchun yuqoridagi tugmani bosing.</p>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

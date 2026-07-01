@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Hujjat yuklash — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">HUJJATLAR</p>
+    <h1 class="page-header__title">Hujjat yuklash</h1>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="glass-card">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="form-label">Fayl *</label>
+      <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.heic">
+      {% if errors.file %}<p class="form-error">{{ errors.file }}</p>{% endif %}
+      <p class="form-hint">PDF, JPG, PNG yoki HEIC formatida</p>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Hujjat turi</label>
+      <select name="doc_type">
+        {% for val, label in doc_type_choices %}
+        <option value="{{ val }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Izoh</label>
+      <textarea name="notes" rows="3" placeholder="Masalan: 2024-yil mart oyidagi tahlil..."></textarea>
+    </div>
+
+    <button type="submit" class="btn-primary">Yuklash</button>
+  </form>
+
+</div>
+{% endblock %}

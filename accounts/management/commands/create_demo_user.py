@@ -19,18 +19,27 @@ class Command(BaseCommand):
         else:
             self.stdout.write('  User demo already exists — updating profile')
 
+        from datetime import date
         profile, _ = Profile.objects.get_or_create(user=user)
-        profile.full_name     = 'Malika Karimova'
-        profile.gender        = 'female'
-        profile.age           = 47
-        profile.height_cm     = 164
-        profile.weight_kg     = 82
-        profile.blood_glucose = 8.6   # mmol/L (≈ 155 mg/dL) — diabetic range
-        profile.bp_systolic   = 130
-        profile.bp_diastolic  = 85
-        profile.daily_steps   = 3200
-        profile.sleep_hours   = 5.8
+        profile.full_name        = 'Malika Karimova'
+        profile.gender           = 'female'
+        profile.birth_date       = date(1979, 3, 15)
+        profile.age              = 47
+        profile.phone_number     = '+998901234567'
+        profile.region           = 'Toshkent shahri'
+        profile.district         = 'Yunusobod tumani'
+        profile.address          = 'Amir Temur ko\'chasi, 42-uy'
+        profile.profession       = 'O\'qituvchi'
+        profile.activity_type    = 'employee'
+        profile.height_cm        = 164
+        profile.weight_kg        = 82
+        profile.blood_glucose    = 8.6   # mmol/L — diabetic range
+        profile.bp_systolic      = 130
+        profile.bp_diastolic     = 85
+        profile.daily_steps      = 3200
+        profile.sleep_hours      = 5.8
         profile.takes_medication = True
+        profile.is_verified      = True
         profile.calculate_risk_score()
         profile.save()
 

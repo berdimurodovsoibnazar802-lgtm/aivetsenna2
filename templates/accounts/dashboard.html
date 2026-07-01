@@ -33,6 +33,73 @@
     </p>
   </div>
 
+  <!-- Faol dorilar card -->
+  <div class="glass-card" style="margin-bottom: 1rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim);">FAOL DORILAR</p>
+      <a href="{% url 'health_medications' %}" style="font-size:0.75rem; color:var(--cyan); text-decoration:none;">Barchasi →</a>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:0.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Metformin <span style="color:var(--text-dim); font-size:0.8rem;">500 mg · 2×/kun</span></span>
+        <span class="risk-badge level-note">Faol</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Lisinopril <span style="color:var(--text-dim); font-size:0.8rem;">10 mg · 1×/kun</span></span>
+        <span class="risk-badge level-note">Faol</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Aspirin <span style="color:var(--text-dim); font-size:0.8rem;">100 mg · 1×/kun</span></span>
+        <span class="risk-badge level-note">Faol</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Qon tahlili card -->
+  <div class="glass-card" style="margin-bottom: 1rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim);">QON TAHLILI</p>
+      <a href="{% url 'health_labs' %}" style="font-size:0.75rem; color:var(--cyan); text-decoration:none;">Ko'rish →</a>
+    </div>
+    <p style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.6rem;">So'nggi: 15.03.2024</p>
+    <div style="display:flex; flex-direction:column; gap:0.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Gemoglobin (HGB)</span>
+        <span class="risk-badge level-medium">Past</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Glyukoza</span>
+        <span class="risk-badge level-high">Yuqori</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Organlar holati card -->
+  <div class="glass-card" style="margin-bottom: 1rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.875rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim);">ORGANLAR HOLATI</p>
+      <a href="{% url 'health_organs' %}" style="font-size:0.75rem; color:var(--cyan); text-decoration:none;">Batafsil →</a>
+    </div>
+    <div style="display:flex; gap:1.25rem; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:0.45rem;">
+        <div style="width:12px; height:12px; border-radius:50%; background:var(--warning); box-shadow:0 0 6px rgba(255,178,59,0.5); flex-shrink:0;"></div>
+        <span style="font-size:0.8125rem; color:var(--text-secondary);">Yurak</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.45rem;">
+        <div style="width:12px; height:12px; border-radius:50%; background:var(--safe); box-shadow:0 0 6px rgba(0,255,136,0.4); flex-shrink:0;"></div>
+        <span style="font-size:0.8125rem; color:var(--text-secondary);">O'pka</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.45rem;">
+        <div style="width:12px; height:12px; border-radius:50%; background:var(--safe); box-shadow:0 0 6px rgba(0,255,136,0.4); flex-shrink:0;"></div>
+        <span style="font-size:0.8125rem; color:var(--text-secondary);">Jigar</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.45rem;">
+        <div style="width:12px; height:12px; border-radius:50%; background:var(--safe); box-shadow:0 0 6px rgba(0,255,136,0.4); flex-shrink:0;"></div>
+        <span style="font-size:0.8125rem; color:var(--text-secondary);">Buyrak</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Stat Grid -->
   <div class="stat-grid" style="margin-bottom: 1rem;">
     <div class="stat-cell">
@@ -71,6 +138,18 @@
     <p class="text-dim text-xs" style="margin-top: 0.75rem; text-align: center;">
       Maqsad: <span style="color: var(--safe);">{{ target }}</span> ballga tushirish
     </p>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="stat-grid" style="margin-bottom: 1rem;">
+    <a href="{% url 'health_medications' %}" class="stat-cell" style="text-decoration: none;">
+      <span class="stat-cell__label">Dorilarim</span>
+      <span class="stat-cell__value" style="font-size: 1rem; color: var(--cyan);">→</span>
+    </a>
+    <a href="{% url 'health_labs' %}" class="stat-cell" style="text-decoration: none;">
+      <span class="stat-cell__label">Tahlillar</span>
+      <span class="stat-cell__value" style="font-size: 1rem; color: var(--cyan);">→</span>
+    </a>
   </div>
 
   <!-- CTA -->

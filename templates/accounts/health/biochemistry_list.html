@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Biokimyo — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">BIOKIMYO</p>
+    <h1 class="page-header__title">Natijalar</h1>
+    <p class="page-header__sub">Biokimyoviy qon tahlillari</p>
+  </div>
+
+  <a href="{% url 'biochemistry_add' %}" class="btn-primary" style="margin-bottom:1rem;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Yangi natija qo'shish
+  </a>
+
+  {% if tests %}
+  <div class="glass-card">
+    {% for t in tests %}
+    <div class="health-item">
+      <div style="flex:1;">
+        <div class="health-item__title">Biokimyo tahlili</div>
+        <div class="health-item__sub">
+          {% if t.glucose %}Glukoza: {{ t.glucose }} mmol/L{% endif %}
+          {% if t.cholesterol_total %} · Xolesterin: {{ t.cholesterol_total }}{% endif %}
+          {% if t.creatinine %} · Kreatinin: {{ t.creatinine }}{% endif %}
+        </div>
+      </div>
+      <span class="health-item__date">{{ t.date }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="glass-card">
+    <div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 3h6l1 9H8L9 3z"/><path d="M8 12s-2 2-2 5a6 6 0 0012 0c0-3-2-5-2-5"/>
+      </svg>
+      <p>Hali biokimyo natijasi yo'q.</p>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

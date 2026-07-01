@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Hujjat — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">HUJJAT</p>
+    <h1 class="page-header__title">{{ doc.get_doc_type_display }}</h1>
+    <p class="page-header__sub">{{ doc.uploaded_at|date:'d.m.Y H:i' }}</p>
+  </div>
+
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p class="section-label">Fayl</p>
+    <a href="{{ doc.file.url }}" target="_blank" class="btn-outline btn-sm" style="display:inline-flex;width:auto;margin-top:0.5rem;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Yuklab olish / Ko'rish
+    </a>
+  </div>
+
+  {% if doc.notes %}
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p class="section-label">Izoh</p>
+    <p class="text-secondary" style="font-size:0.875rem;">{{ doc.notes }}</p>
+  </div>
+  {% endif %}
+
+  {% if doc.extracted_text %}
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p class="section-label">Matn (avtomatik)</p>
+    <p style="font-size:0.8125rem;color:var(--text-secondary);white-space:pre-wrap;line-height:1.7;">{{ doc.extracted_text }}</p>
+  </div>
+  {% endif %}
+
+  <a href="{% url 'document_list' %}" class="btn-outline">Orqaga</a>
+
+</div>
+{% endblock %}

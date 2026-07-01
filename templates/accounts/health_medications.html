@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Dorilar — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">DORILAR</p>
+    <h1 class="page-header__title">Dori-darmonlar</h1>
+    <p class="page-header__sub">Faol retseptlar va dozalar</p>
+  </div>
+
+  {% for med in medications %}
+  <div class="glass-card" style="margin-bottom: 0.75rem;">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem;">
+      <div>
+        <p style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">{{ med.name }}</p>
+        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.15rem;">{{ med.purpose }}</p>
+      </div>
+      <span class="risk-badge level-note" style="white-space: nowrap; flex-shrink: 0;">{{ med.status }}</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+      <div>
+        <p style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);">Dozasi</p>
+        <p style="font-size: 0.9rem; color: var(--text-primary); margin-top: 0.15rem;">{{ med.dosage }}</p>
+      </div>
+      <div>
+        <p style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);">Chastota</p>
+        <p style="font-size: 0.9rem; color: var(--text-primary); margin-top: 0.15rem;">{{ med.frequency }}</p>
+      </div>
+      <div>
+        <p style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);">Boshlanish</p>
+        <p style="font-size: 0.9rem; color: var(--text-primary); margin-top: 0.15rem;">{{ med.since }}</p>
+      </div>
+      <div>
+        <p style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim);">Shifokor</p>
+        <p style="font-size: 0.9rem; color: var(--text-primary); margin-top: 0.15rem;">{{ med.prescribed_by }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="glass-card" style="margin-top: 1rem; text-align: center; padding: 1rem;">
+    <p class="text-xs text-dim">
+      Bu ma'lumotlar demo maqsadida ko'rsatilmoqda.<br>
+      Dori qabul qilishni o'zgartirmasdan oldin shifokoringiz bilan maslahatlashing.
+    </p>
+  </div>
+
+  <a href="{% url 'dashboard' %}" class="btn-outline" style="display: flex; margin-top: 1rem;">
+    Bosh sahifaga qaytish
+  </a>
+
+</div>
+{% endblock %}

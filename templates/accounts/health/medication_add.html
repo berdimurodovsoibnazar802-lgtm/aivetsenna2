@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Dori qo'shish — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">DORILAR</p>
+    <h1 class="page-header__title">Dori qo'shish</h1>
+  </div>
+
+  <form method="post" class="glass-card">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="form-label">Dori nomi *</label>
+      <input type="text" name="name" value="{{ post.name }}" placeholder="Masalan: Metformin">
+      {% if errors.name %}<p class="form-error">{{ errors.name }}</p>{% endif %}
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div class="form-group">
+        <label class="form-label">Dozasi</label>
+        <input type="text" name="dosage" value="{{ post.dosage }}" placeholder="Masalan: 500 mg">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Chastotasi</label>
+        <select name="frequency">
+          {% for val, label in freq_choices %}
+          <option value="{{ val }}" {% if post.frequency == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div class="form-group">
+        <label class="form-label">Boshlanish sanasi *</label>
+        <input type="date" name="start_date" value="{{ post.start_date }}">
+        {% if errors.start_date %}<p class="form-error">{{ errors.start_date }}</p>{% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tugash sanasi</label>
+        <input type="date" name="end_date" value="{{ post.end_date }}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Shifokor nomi</label>
+      <input type="text" name="prescribed_by" value="{{ post.prescribed_by }}" placeholder="Ixtiyoriy">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Izoh</label>
+      <textarea name="notes" rows="2" placeholder="Qo'shimcha ma'lumotlar...">{{ post.notes }}</textarea>
+    </div>
+
+    <button type="submit" class="btn-primary">Saqlash</button>
+  </form>
+
+</div>
+{% endblock %}

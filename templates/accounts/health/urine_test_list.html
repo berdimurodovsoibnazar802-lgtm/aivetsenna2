@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Siydik tahlili — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">SIYDIK TAHLILI</p>
+    <h1 class="page-header__title">Natijalar</h1>
+  </div>
+
+  <a href="{% url 'urine_test_add' %}" class="btn-primary" style="margin-bottom:1rem;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Yangi natija qo'shish
+  </a>
+
+  {% if tests %}
+  <div class="glass-card">
+    {% for t in tests %}
+    <div class="health-item">
+      <div style="flex:1;">
+        <div class="health-item__title">Siydik tahlili</div>
+        <div class="health-item__sub">
+          {% if t.ph %}pH: {{ t.ph }}{% endif %}
+          {% if t.protein and t.protein != 'negative' %} · Oqsil: {{ t.get_protein_display }}{% endif %}
+          {% if t.glucose and t.glucose != 'negative' %} · Glukoza: {{ t.get_glucose_display }}{% endif %}
+          {% if t.color %} · {{ t.color }}{% endif %}
+        </div>
+      </div>
+      <span class="health-item__date">{{ t.date }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="glass-card">
+    <div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="12" cy="15" rx="5" ry="6"/><path d="M12 9V4"/>
+      </svg>
+      <p>Hali siydik tahlili natijasi yo'q.</p>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

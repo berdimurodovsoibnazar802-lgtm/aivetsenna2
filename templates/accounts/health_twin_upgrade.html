@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Organ holati — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">RAQAMLI EGIZAK</p>
+    <h1 class="page-header__title">Organ holati</h1>
+    <p class="page-header__sub">{{ profile.full_name }} · Demo ma'lumotlar</p>
+  </div>
+
+  {% for organ in organs %}
+  <div class="risk-factor-card level-{{ organ.level }}" style="margin-bottom: 0.625rem;">
+
+    <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
+
+      <!-- Icon circle -->
+      <div style="
+        width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        background: {% if organ.level == 'high' %}rgba(255,59,92,0.15){% elif organ.level == 'medium' %}rgba(255,178,59,0.15){% else %}rgba(0,255,136,0.12){% endif %};
+      ">
+        {% if organ.icon == 'heart' %}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="{% if organ.level == 'high' %}#FF3B5C{% elif organ.level == 'medium' %}#FFB23B{% else %}#00FF88{% endif %}"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+        </svg>
+        {% elif organ.icon == 'lungs' %}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="{% if organ.level == 'high' %}#FF3B5C{% elif organ.level == 'medium' %}#FFB23B{% else %}#00FF88{% endif %}"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v8M4.93 10.93A10 10 0 004 15c0 3.87 3.13 7 7 7h2c3.87 0 7-3.13 7-7a10 10 0 00-.93-4.07"/>
+          <path d="M12 10c-2 0-4 1-5 3"/>
+          <path d="M12 10c2 0 4 1 5 3"/>
+        </svg>
+        {% elif organ.icon == 'liver' %}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="{% if organ.level == 'high' %}#FF3B5C{% elif organ.level == 'medium' %}#FFB23B{% else %}#00FF88{% endif %}"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12c0-5 3-9 9-9s10 4 10 9c0 6-5 9-10 9C6 21 3 18 3 12z"/>
+        </svg>
+        {% elif organ.icon == 'kidney' %}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="{% if organ.level == 'high' %}#FF3B5C{% elif organ.level == 'medium' %}#FFB23B{% else %}#00FF88{% endif %}"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="9" cy="12" rx="4" ry="7"/>
+          <ellipse cx="15" cy="12" rx="4" ry="7"/>
+        </svg>
+        {% else %}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="{% if organ.level == 'high' %}#FF3B5C{% elif organ.level == 'medium' %}#FFB23B{% else %}#00FF88{% endif %}"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C6 8 4 12 4 15a8 8 0 0016 0c0-3-2-7-8-13z"/>
+        </svg>
+        {% endif %}
+      </div>
+
+      <div>
+        <p class="risk-factor__name">{{ organ.name }}</p>
+        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.1rem;">{{ organ.detail }}</p>
+      </div>
+    </div>
+
+    <span class="risk-badge level-{{ organ.level }}" style="text-align: right; max-width: 140px; white-space: normal; line-height: 1.3;">
+      {{ organ.label }}
+    </span>
+  </div>
+  {% endfor %}
+
+  <div class="glass-card" style="margin-top: 1rem;">
+    <p style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.5rem;">ESLATMA</p>
+    <p class="text-sm text-secondary">
+      Bu natijalar demo maqsadida ko'rsatilmoqda.
+      Aniq tashxis uchun mutaxassis shifokorga murojaat qiling.
+    </p>
+  </div>
+
+  <a href="{% url 'twin' %}" class="btn-outline" style="display: flex; margin-top: 1rem;">
+    Digital Twin'ga qaytish
+  </a>
+
+</div>
+{% endblock %}

@@ -102,9 +102,17 @@
     </div>
   </div>
 
-  <a href="{% url 'analysis' %}" class="btn-outline" style="display:flex; justify-content:center;">
-    Batafsil tahlil ko'rish
-  </a>
+  <div style="display:flex; flex-direction:column; gap:0.625rem;">
+    <a href="{% url 'health_organs' %}" class="btn-outline" style="display:flex; justify-content:center;">
+      Organlar holati
+    </a>
+    <a href="{% url 'health_simulation' %}" class="btn-outline" style="display:flex; justify-content:center;">
+      Simulyatsiya
+    </a>
+    <a href="{% url 'analysis' %}" class="btn-outline" style="display:flex; justify-content:center;">
+      Batafsil tahlil ko'rish
+    </a>
+  </div>
 
 </div>
 {% endblock %}

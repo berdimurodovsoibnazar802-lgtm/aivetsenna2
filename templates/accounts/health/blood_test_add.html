@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Qon tahlili — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">QON TAHLILI</p>
+    <h1 class="page-header__title">Natija kiriting</h1>
+    <p class="page-header__sub">Laboratotiya ko'rsatkichlari</p>
+  </div>
+
+  <form method="post" class="glass-card">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="form-label">Sana *</label>
+      <input type="date" name="date" value="{{ post.date }}">
+      {% if errors.date %}<p class="form-error">{{ errors.date }}</p>{% endif %}
+    </div>
+
+    <p class="section-label" style="margin-top:0.5rem;">Umumiy qon tahlili (OAK)</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div class="form-group">
+        <label class="form-label">Gemoglobin (g/dL)</label>
+        <input type="number" name="hemoglobin" step="0.1" min="0" value="{{ post.hemoglobin }}" placeholder="13.5–17.5">
+      </div>
+      <div class="form-group">
+        <label class="form-label">WBC (×10⁹/L)</label>
+        <input type="number" name="wbc" step="0.01" min="0" value="{{ post.wbc }}" placeholder="4.5–11.0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">RBC (×10¹²/L)</label>
+        <input type="number" name="rbc" step="0.01" min="0" value="{{ post.rbc }}" placeholder="4.5–5.9">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Trombotsitlar (×10⁹/L)</label>
+        <input type="number" name="platelets" step="1" min="0" value="{{ post.platelets }}" placeholder="150–400">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gematokrit (%)</label>
+        <input type="number" name="hematocrit" step="0.1" min="0" value="{{ post.hematocrit }}" placeholder="41–53">
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:0.25rem;">Yallig'lanish ko'rsatkichlari</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div class="form-group">
+        <label class="form-label">ESR (mm/soat)</label>
+        <input type="number" name="esr" step="0.1" min="0" value="{{ post.esr }}" placeholder="2–15">
+      </div>
+      <div class="form-group">
+        <label class="form-label">CRP (mg/L)</label>
+        <input type="number" name="crp" step="0.01" min="0" value="{{ post.crp }}" placeholder="< 5">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Izohlar</label>
+      <textarea name="notes" rows="3" placeholder="Shifokor izohi yoki shaxsiy eslatmalar...">{{ post.notes }}</textarea>
+    </div>
+
+    <button type="submit" class="btn-primary">Saqlash</button>
+  </form>
+
+</div>
+{% endblock %}

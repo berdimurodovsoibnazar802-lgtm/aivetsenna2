@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Qon tahlili — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">QON TAHLILI</p>
+    <h1 class="page-header__title">{{ test.date }}</h1>
+    <p class="page-header__sub">Natija tafsilotlari</p>
+  </div>
+
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p class="section-label">Umumiy qon tahlili (OAK)</p>
+    <div class="stat-grid">
+      <div class="stat-cell">
+        <span class="stat-cell__label">Gemoglobin</span>
+        <span class="stat-cell__value">{{ test.hemoglobin|default_if_none:'—' }}{% if test.hemoglobin %} <span style="font-size:0.75rem;color:var(--text-dim);">g/dL</span>{% endif %}</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-cell__label">WBC</span>
+        <span class="stat-cell__value">{{ test.wbc|default_if_none:'—' }}{% if test.wbc %} <span style="font-size:0.75rem;color:var(--text-dim);">×10⁹/L</span>{% endif %}</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-cell__label">RBC</span>
+        <span class="stat-cell__value">{{ test.rbc|default_if_none:'—' }}{% if test.rbc %} <span style="font-size:0.75rem;color:var(--text-dim);">×10¹²/L</span>{% endif %}</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-cell__label">Trombotsitlar</span>
+        <span class="stat-cell__value">{{ test.platelets|default_if_none:'—' }}{% if test.platelets %} <span style="font-size:0.75rem;color:var(--text-dim);">×10⁹/L</span>{% endif %}</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-cell__label">Gematokrit</span>
+        <span class="stat-cell__value">{{ test.hematocrit|default_if_none:'—' }}{% if test.hematocrit %}<span style="font-size:0.75rem;color:var(--text-dim);">%</span>{% endif %}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p class="section-label">Yallig'lanish ko'rsatkichlari</p>
+    <div class="stat-grid">
+      <div class="stat-cell">
+        <span class="stat-cell__label">ESR</span>
+        <span class="stat-cell__value">{{ test.esr|default_if_none:'—' }}{% if test.esr %} <span style="font-size:0.75rem;color:var(--text-dim);">mm/h</span>{% endif %}</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-cell__label">CRP</span>
+        <span class="stat-cell__value">{{ test.crp|default_if_none:'—' }}{% if test.crp %} <span style="font-size:0.75rem;color:var(--text-dim);">mg/L</span>{% endif %}</span>
+      </div>
+    </div>
+  </div>
+
+  {% if test.notes %}
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p class="section-label">Izoh</p>
+    <p class="text-secondary" style="font-size:0.875rem;">{{ test.notes }}</p>
+  </div>
+  {% endif %}
+
+  <a href="{% url 'blood_test_list' %}" class="btn-outline">Orqaga</a>
+
+</div>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}Biokimyo — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">BIOKIMYO</p>
+    <h1 class="page-header__title">Natija kiriting</h1>
+  </div>
+
+  <form method="post" class="glass-card">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="form-label">Sana *</label>
+      <input type="date" name="date" value="{{ post.date }}">
+      {% if errors.date %}<p class="form-error">{{ errors.date }}</p>{% endif %}
+    </div>
+
+    <p class="section-label" style="margin-top:0.25rem;">Uglevodlar va azot almashinuvi</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div class="form-group">
+        <label class="form-label">Glukoza (mmol/L)</label>
+        <input type="number" name="glucose" step="0.01" min="0" value="{{ post.glucose }}" placeholder="3.9–5.5">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mochevina (mmol/L)</label>
+        <input type="number" name="urea" step="0.01" min="0" value="{{ post.urea }}" placeholder="2.5–8.3">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kreatinin (µmol/L)</label>
+        <input type="number" name="creatinine" step="0.1" min="0" value="{{ post.creatinine }}" placeholder="53–115">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Siydik kislota (mmol/L)</label>
+        <input type="number" name="uric_acid" step="0.01" min="0" value="{{ post.uric_acid }}" placeholder="0.15–0.45">
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:0.25rem;">Jigar fermenlari</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div class="form-group">
+        <label class="form-label">ALT (U/L)</label>
+        <input type="number" name="alt" step="0.1" min="0" value="{{ post.alt }}" placeholder="7–56">
+      </div>
+      <div class="form-group">
+        <label class="form-label">AST (U/L)</label>
+        <input type="number" name="ast" step="0.1" min="0" value="{{ post.ast }}" placeholder="10–40">
+      </div>
+      <div class="form-group" style="grid-column:span 2;">
+        <label class="form-label">Bilirubin (µmol/L)</label>
+        <input type="number" name="bilirubin" step="0.1" min="0" value="{{ post.bilirubin }}" placeholder="5–21">
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:0.25rem;">Lipidlar</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div class="form-group">
+        <label class="form-label">Umumiy xolesterin</label>
+        <input type="number" name="cholesterol_total" step="0.01" min="0" value="{{ post.cholesterol_total }}" placeholder="< 5.2">
+      </div>
+      <div class="form-group">
+        <label class="form-label">HDL (mmol/L)</label>
+        <input type="number" name="hdl" step="0.01" min="0" value="{{ post.hdl }}" placeholder="> 1.0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">LDL (mmol/L)</label>
+        <input type="number" name="ldl" step="0.01" min="0" value="{{ post.ldl }}" placeholder="< 3.4">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Triglitseridlar</label>
+        <input type="number" name="triglycerides" step="0.01" min="0" value="{{ post.triglycerides }}" placeholder="< 1.7">
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top:0.25rem;">Elektrolitlar</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem;">
+      <div class="form-group">
+        <label class="form-label">Natriy (mmol/L)</label>
+        <input type="number" name="sodium" step="0.1" min="0" value="{{ post.sodium }}" placeholder="136–145">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kaliy (mmol/L)</label>
+        <input type="number" name="potassium" step="0.01" min="0" value="{{ post.potassium }}" placeholder="3.5–5.1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kaltsiy (mmol/L)</label>
+        <input type="number" name="calcium" step="0.01" min="0" value="{{ post.calcium }}" placeholder="2.2–2.6">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Izoh</label>
+      <textarea name="notes" rows="2" placeholder="Qo'shimcha ma'lumotlar...">{{ post.notes }}</textarea>
+    </div>
+
+    <button type="submit" class="btn-primary">Saqlash</button>
+  </form>
+
+</div>
+{% endblock %}

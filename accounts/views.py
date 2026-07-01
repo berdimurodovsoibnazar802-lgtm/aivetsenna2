@@ -279,3 +279,185 @@ def analysis_view(request):
 def profile_view(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
     return render(request, 'accounts/profile.html', {'profile': profile})
+
+
+@login_required
+def health_medications_view(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    medications = [
+        {
+            'name': 'Metformin',
+            'dosage': '500 mg',
+            'frequency': '2×/kun (ertalab va kechqurun)',
+            'since': '2022-03-15',
+            'prescribed_by': 'Dr. Yusupov A.',
+            'purpose': 'Qon shakarini pasaytirish (2-toifa diabet)',
+            'status': 'Faol',
+        },
+        {
+            'name': 'Lisinopril',
+            'dosage': '10 mg',
+            'frequency': '1×/kun (ertalab)',
+            'since': '2023-01-08',
+            'prescribed_by': 'Dr. Rashidova M.',
+            'purpose': 'Qon bosimini nazorat qilish',
+            'status': 'Faol',
+        },
+        {
+            'name': 'Aspirin (kardiologik)',
+            'dosage': '100 mg',
+            'frequency': '1×/kun (ovqat bilan)',
+            'since': '2023-01-08',
+            'prescribed_by': 'Dr. Rashidova M.',
+            'purpose': 'Yurak-tomir kasalliklari profilaktikasi',
+            'status': 'Faol',
+        },
+    ]
+    return render(request, 'accounts/health_medications.html', {
+        'profile': profile,
+        'medications': medications,
+    })
+
+
+@login_required
+def health_labs_view(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    cbc = [
+        {'name': 'Gemoglobin (Hb)',    'value': '11.2', 'unit': 'g/dL',     'ref': '12.0–16.0', 'status': 'low'},
+        {'name': 'Eritrotsitlar (RBC)','value': '4.1',  'unit': '×10¹²/L',  'ref': '4.0–5.2',   'status': 'normal'},
+        {'name': 'Leykotsitlar (WBC)', 'value': '9.8',  'unit': '×10⁹/L',   'ref': '4.5–11.0',  'status': 'normal'},
+        {'name': 'Trombotsitlar',      'value': '412',  'unit': '×10⁹/L',   'ref': '150–400',   'status': 'high'},
+        {'name': 'Gematokrit (Ht)',     'value': '34',   'unit': '%',         'ref': '36–46',     'status': 'low'},
+        {'name': 'ESR',                'value': '28',   'unit': 'mm/soat',   'ref': '2–20',      'status': 'high'},
+        {'name': 'CRP',                'value': '4.2',  'unit': 'mg/L',      'ref': '< 5.0',     'status': 'normal'},
+    ]
+    return render(request, 'accounts/health_labs.html', {
+        'profile': profile,
+        'cbc': cbc,
+        'lab_date': '18.06.2026',
+    })
+
+
+@login_required
+def health_twin_upgrade_view(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    organs = [
+        {
+            'name': 'Yurak',
+            'detail': 'QB: 130/85 mmHg',
+            'label': 'Kuzatuv talab qilinadi',
+            'level': 'medium',
+            'icon': 'heart',
+        },
+        {
+            'name': "O'pka",
+            'detail': "Ko'rsatkich me'yor doirasida",
+            'label': 'Yaxshi holat',
+            'level': 'low',
+            'icon': 'lungs',
+        },
+        {
+            'name': 'Jigar',
+            'detail': "ALT, AST me'yor doirasida",
+            'label': 'Yaxshi holat',
+            'level': 'low',
+            'icon': 'liver',
+        },
+        {
+            'name': 'Buyrak',
+            'detail': "Kreatinin me'yor doirasida",
+            'label': 'Normal',
+            'level': 'low',
+            'icon': 'kidney',
+        },
+        {
+            'name': 'Qon shakari',
+            'detail': 'Glyukoza: 8.6 mmol/L',
+            'label': 'Yuqori — shifokor bilan maslahatlashing',
+            'level': 'high',
+            'icon': 'glucose',
+        },
+    ]
+    return render(request, 'accounts/health_twin_upgrade.html', {
+        'profile': profile,
+        'organs': organs,
+    })
+
+
+@login_required
+def health_simulation_view(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    scenarios = [
+        {
+            'id': 'monitoring',
+            'label': 'Faqat kuzatuv',
+            'desc': "Dori yo'q, faqat muntazam tekshiruv",
+            'risk_3m': 68,
+            'risk_6m': 65,
+            'risk_12m': 62,
+            'color': '#FFB23B',
+        },
+        {
+            'id': 'medication',
+            'label': 'Dori qabul qilish',
+            'desc': 'Metformin + Lisinopril davomi',
+            'risk_3m': 52,
+            'risk_6m': 45,
+            'risk_12m': 40,
+            'color': '#00D4FF',
+        },
+        {
+            'id': 'combined',
+            'label': 'Dori + turmush tarzi',
+            'desc': "Dori + parhezkor ovqat + harakatlanish",
+            'risk_3m': 42,
+            'risk_6m': 32,
+            'risk_12m': 24,
+            'color': '#00FF88',
+        },
+    ]
+    return render(request, 'accounts/health_simulation.html', {
+        'profile': profile,
+        'scenarios': scenarios,
+    })
+
+
+@login_required
+def health_organs_view(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    organs = [
+        {
+            'name': 'Yurak',
+            'detail': 'QB: 130/85 mmHg',
+            'label': 'Kuzatuv talab qilinadi',
+            'level': 'medium',
+        },
+        {
+            'name': "O'pka",
+            'detail': "Nafas olish me'yor doirasida",
+            'label': 'Yaxshi holat',
+            'level': 'low',
+        },
+        {
+            'name': 'Jigar',
+            'detail': "ALT/AST me'yor doirasida",
+            'label': 'Normal',
+            'level': 'low',
+        },
+        {
+            'name': 'Buyrak',
+            'detail': "Kreatinin me'yor doirasida",
+            'label': 'Normal',
+            'level': 'low',
+        },
+        {
+            'name': 'Qon shakari',
+            'detail': 'Glyukoza: 8.6 mmol/L',
+            'label': 'Yuqori — shifokorga murojaat qiling',
+            'level': 'high',
+        },
+    ]
+    return render(request, 'accounts/health_organs.html', {
+        'profile': profile,
+        'organs': organs,
+    })

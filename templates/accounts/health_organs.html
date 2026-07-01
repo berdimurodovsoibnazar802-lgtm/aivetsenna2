@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Organ holati — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">RAQAMLI EGIZAK</p>
+    <h1 class="page-header__title">Organlar holati</h1>
+    <p class="page-header__sub">{{ profile.full_name }} · Demo ma'lumotlar</p>
+  </div>
+
+  {% for organ in organs %}
+  <div class="risk-factor-card level-{{ organ.level }}" style="margin-bottom: 0.625rem;">
+    <div style="flex: 1;">
+      <p class="risk-factor__name">{{ organ.name }}</p>
+      <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.15rem;">{{ organ.detail }}</p>
+    </div>
+    <span class="risk-badge level-{{ organ.level }}" style="text-align:right; max-width:160px; white-space:normal; line-height:1.35;">
+      {{ organ.label }}
+    </span>
+  </div>
+  {% endfor %}
+
+  <!-- Safety banner -->
+  <div style="
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.18);
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  ">
+    <p style="font-size: 0.8125rem; color: rgba(255,255,255,0.55); line-height: 1.6;">
+      <span style="color: var(--cyan); font-weight: 600;">ℹ Eslatma:</span>
+      Bu natijalar shifokor tashxisini almashtirmaydi.
+      Aniq ma'lumot uchun mutaxassis bilan maslahatlashing.
+    </p>
+  </div>
+
+  <a href="{% url 'twin' %}" class="btn-outline" style="display: flex; justify-content: center;">
+    Digital Twin'ga qaytish
+  </a>
+
+</div>
+{% endblock %}

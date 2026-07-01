@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Qon tahlili — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">LABORATORIYA</p>
+    <h1 class="page-header__title">Qon tahlili (OAK)</h1>
+    <p class="page-header__sub">Sana: {{ lab_date }}</p>
+  </div>
+
+  <div class="glass-card" style="margin-bottom: 1rem;">
+
+    <!-- Legend -->
+    <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+      <span class="risk-badge level-low">Me'yor</span>
+      <span class="risk-badge level-high">Yuqori</span>
+      <span class="risk-badge level-medium">Past</span>
+    </div>
+
+    <div style="height: 1px; background: var(--border-subtle); margin-bottom: 1rem;"></div>
+
+    {% for row in cbc %}
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border-subtle);">
+      <div style="flex: 1;">
+        <p style="font-size: 0.875rem; font-weight: 500; color: var(--text-primary);">{{ row.name }}</p>
+        <p style="font-size: 0.72rem; color: var(--text-dim); margin-top: 0.1rem;">Me'yor: {{ row.ref }}</p>
+      </div>
+      <div style="text-align: right; display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0;">
+        <span style="font-size: 1rem; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums;">
+          {{ row.value }} <span style="font-size: 0.72rem; font-weight: 400; color: var(--text-dim);">{{ row.unit }}</span>
+        </span>
+        {% if row.status == 'high' %}
+          <span class="risk-badge level-high">Yuqori</span>
+        {% elif row.status == 'low' %}
+          <span class="risk-badge level-medium">Past</span>
+        {% else %}
+          <span class="risk-badge level-low">Me'yor</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <div class="glass-card" style="border-left: 3px solid var(--warning);">
+    <p style="font-size: 0.75rem; font-weight: 700; color: var(--warning); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem;">Shifokor izohi</p>
+    <p class="text-sm text-secondary">
+      Gemoglobin va gematokrit ko'rsatkichlari pastligi kamqonlik (anemiya) belgilari bo'lishi mumkin.
+      Trombotsitlar va ESR oshganligi surunkali yallig'lanish jarayoniga ishora qiladi.
+      Keyingi tekshiruv: 3 oydan so'ng.
+    </p>
+  </div>
+
+  <a href="{% url 'dashboard' %}" class="btn-outline" style="display: flex; margin-top: 1rem;">
+    Bosh sahifaga qaytish
+  </a>
+
+</div>
+{% endblock %}

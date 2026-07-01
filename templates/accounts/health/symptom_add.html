@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Simptom yozish — Alvitsenna{% endblock %}
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">SIMPTOMLAR</p>
+    <h1 class="page-header__title">Simptom yozish</h1>
+  </div>
+
+  <form method="post" class="glass-card">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label class="form-label">Sana *</label>
+      <input type="date" name="date" value="{{ post.date }}">
+      {% if errors.date %}<p class="form-error">{{ errors.date }}</p>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Simptom tavsifi *</label>
+      <textarea name="symptom_text" rows="4" placeholder="Masalan: Bosh og'rig'i, ko'ngil aynishi...">{{ post.symptom_text }}</textarea>
+      {% if errors.symptom_text %}<p class="form-error">{{ errors.symptom_text }}</p>{% endif %}
+    </div>
+
+    <div class="sim-slider-row form-group">
+      <label class="form-label">
+        Og'irlik darajasi (1–10)
+        <span id="sevLabel">{{ post.severity|default:'5' }}</span>
+      </label>
+      <input type="range" name="severity" min="1" max="10" value="{{ post.severity|default:'5' }}"
+             oninput="document.getElementById('sevLabel').textContent=this.value">
+      <div style="display:flex;justify-content:space-between;margin-top:0.25rem;">
+        <span class="text-xs text-safe">1 — Engil</span>
+        <span class="text-xs" style="color:var(--warning)">5 — O'rtacha</span>
+        <span class="text-xs text-danger">10 — Juda og'ir</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Davomiyligi (soat)</label>
+      <input type="number" name="duration_hours" step="0.5" min="0" value="{{ post.duration_hours }}" placeholder="Masalan: 2.5">
+    </div>
+
+    <button type="submit" class="btn-primary">Saqlash</button>
+  </form>
+
+</div>
+{% endblock %}
