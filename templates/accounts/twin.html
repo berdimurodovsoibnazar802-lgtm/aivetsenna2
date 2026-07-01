@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Digital Twin — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">RAQAMLI EGIZAK</p>
+    <h1 class="page-header__title">Digital Twin</h1>
+    <p class="page-header__sub">Sog'liq xavf zonalari vizualizatsiyasi</p>
+  </div>
+
+  <div class="glass-card" style="padding:1.75rem 1rem 1.5rem; margin-bottom:1rem; display:flex; flex-direction:column; align-items:center;">
+
+    <!-- Hologram image with pulse-dot overlay and scan-line -->
+    <div class="scan-wrapper" style="
+      position: relative;
+      width: 100%;
+      max-width: 340px;
+      border-radius: 12px;
+      overflow: hidden;
+    ">
+
+      {% if profile.gender == 'female' %}
+        <img src="{% static 'img/avatars/female_hologram.jpg' %}"
+             alt="Digital Twin hologram"
+             style="width:100%; max-width:340px; display:block; margin:0 auto; border-radius:12px;">
+      {% else %}
+        <img src="{% static 'img/avatars/male_hologram.jpg' %}"
+             alt="Digital Twin hologram"
+             style="width:100%; max-width:340px; display:block; margin:0 auto; border-radius:12px;">
+      {% endif %}
+
+      <!-- Scan-line sweeping over the image -->
+      <div class="scan-line"></div>
+
+      <!-- Organ glow marker — both images share same composition (960x1280), glow at ~top:31% left:45% -->
+      {% if profile.bp_systolic and profile.bp_systolic >= 130 or profile.blood_glucose and profile.blood_glucose >= 7.0 %}
+        <div class="pulse-dot" style="position:absolute; top:31%; left:45%; transform:translate(-50%,-50%);"></div>
+      {% else %}
+        <div style="position:absolute; top:31%; left:45%; transform:translate(-50%,-50%); width:24px; height:24px; border-radius:50%; background:#FF3B5C; opacity:0.3;"></div>
+      {% endif %}
+
+    </div>
+
+    <!-- Risk score below the image -->
+    <div style="margin-top:1.5rem; text-align:center;">
+      <div class="risk-score {% if profile.risk_score >= 70 %}high{% elif profile.risk_score >= 40 %}medium{% endif %}"
+           style="font-size:3rem;">
+        {{ profile.risk_score }}
+      </div>
+      <p class="risk-score__label" style="margin-top:0.35rem;">
+        {% if profile.risk_score >= 70 %}Kritik xavf zonasi
+        {% elif profile.risk_score >= 40 %}Kuzatuv zonasi
+        {% else %}Barqaror holat
+        {% endif %}
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Marker legend -->
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.75rem;">BELGILAR</p>
+
+    <div style="display:flex; flex-direction:column; gap:0.65rem;">
+
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <div style="
+          width:14px; height:14px; border-radius:50%; flex-shrink:0;
+          background:#FF3B5C;
+          opacity:{% if profile.bp_systolic and profile.bp_systolic >= 130 %}1{% else %}0.25{% endif %};
+        "></div>
+        <span class="text-sm text-secondary">
+          Yurak zonasi — qon bosimi
+          {% if profile.bp_systolic and profile.bp_systolic >= 130 %}
+            <span class="risk-badge level-high" style="margin-left:0.5rem;">{{ profile.bp_systolic }}/{{ profile.bp_diastolic|default:'?' }} mmHg</span>
+          {% else %}
+            <span style="color:var(--text-dim);">(me'yor doirasida)</span>
+          {% endif %}
+        </span>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <div style="
+          width:14px; height:14px; border-radius:50%; flex-shrink:0;
+          background:#FF3B5C;
+          opacity:{% if profile.blood_glucose and profile.blood_glucose >= 7.0 %}1{% else %}0.25{% endif %};
+        "></div>
+        <span class="text-sm text-secondary">
+          Me'da osti bezi — glyukoza
+          {% if profile.blood_glucose and profile.blood_glucose >= 7.0 %}
+            <span class="risk-badge level-high" style="margin-left:0.5rem;">{{ profile.blood_glucose }} mmol/L</span>
+          {% else %}
+            <span style="color:var(--text-dim);">(me'yor doirasida)</span>
+          {% endif %}
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <a href="{% url 'analysis' %}" class="btn-outline" style="display:flex; justify-content:center;">
+    Batafsil tahlil ko'rish
+  </a>
+
+</div>
+{% endblock %}

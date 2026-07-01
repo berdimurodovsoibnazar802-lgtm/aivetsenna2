@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ma'lumotlarni kiritish — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">BOSQICH 1 / 3</p>
+    <h1 class="page-header__title">Sog'liq ma'lumotlari</h1>
+    <p class="page-header__sub">Digital Twiningiz uchun asosiy ko'rsatkichlarni kiriting</p>
+  </div>
+
+  <div class="progress-segments">
+    <div class="progress-segment active"></div>
+    <div class="progress-segment"></div>
+    <div class="progress-segment"></div>
+  </div>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <!-- Shaxsiy ma'lumotlar -->
+    <div class="glass-card" style="margin-bottom: 1rem;">
+      <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem;">Shaxsiy</p>
+
+      <div class="form-group">
+        <label class="form-label" for="id_full_name">To'liq ism</label>
+        <input
+          type="text"
+          id="id_full_name"
+          name="full_name"
+          value="{{ profile.full_name|default:'' }}"
+          placeholder="Ism Familiya"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_gender">Jinsi</label>
+        <select id="id_gender" name="gender">
+          <option value="male"   {% if profile.gender == 'male' %}selected{% endif %}>Erkak</option>
+          <option value="female" {% if profile.gender == 'female' %}selected{% endif %}>Ayol</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_age">Yosh</label>
+        <input
+          type="number"
+          id="id_age"
+          name="age"
+          value="{{ profile.age|default_if_none:'' }}"
+          placeholder="30"
+          min="1" max="120"
+        >
+      </div>
+    </div>
+
+    <!-- Jismoniy ko'rsatkichlar -->
+    <div class="glass-card" style="margin-bottom: 1rem;">
+      <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem;">Jismoniy</p>
+
+      <div class="stat-grid" style="margin-bottom: 1rem;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="id_height_cm">Bo'y (sm)</label>
+          <input
+            type="number"
+            id="id_height_cm"
+            name="height_cm"
+            value="{{ profile.height_cm|default_if_none:'' }}"
+            placeholder="175"
+            min="50" max="250"
+          >
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="id_weight_kg">Vazn (kg)</label>
+          <input
+            type="number"
+            id="id_weight_kg"
+            name="weight_kg"
+            value="{{ profile.weight_kg|default_if_none:'' }}"
+            placeholder="70"
+            min="1" max="300"
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Tibbiy ko'rsatkichlar -->
+    <div class="glass-card" style="margin-bottom: 1rem;">
+      <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem;">Tibbiy</p>
+
+      <div class="form-group">
+        <label class="form-label" for="id_blood_glucose">Qon glyukozasi (mmol/L)</label>
+        <input
+          type="number"
+          id="id_blood_glucose"
+          name="blood_glucose"
+          value="{{ profile.blood_glucose|default_if_none:'' }}"
+          placeholder="5.6"
+          step="0.1" min="0"
+        >
+      </div>
+
+      <div class="stat-grid" style="margin-bottom: 1rem;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="id_bp_systolic">Qon bosimi (yuqori)</label>
+          <input
+            type="number"
+            id="id_bp_systolic"
+            name="bp_systolic"
+            value="{{ profile.bp_systolic|default_if_none:'' }}"
+            placeholder="120"
+            min="60" max="250"
+          >
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="id_bp_diastolic">Qon bosimi (quyi)</label>
+          <input
+            type="number"
+            id="id_bp_diastolic"
+            name="bp_diastolic"
+            value="{{ profile.bp_diastolic|default_if_none:'' }}"
+            placeholder="80"
+            min="40" max="150"
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Turmush tarzi -->
+    <div class="glass-card" style="margin-bottom: 1.5rem;">
+      <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem;">Turmush tarzi</p>
+
+      <div class="form-group">
+        <label class="form-label" for="id_daily_steps">Kunlik qadamlar</label>
+        <input
+          type="number"
+          id="id_daily_steps"
+          name="daily_steps"
+          value="{{ profile.daily_steps|default_if_none:'' }}"
+          placeholder="8000"
+          min="0"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_sleep_hours">Uyqu (soat)</label>
+        <input
+          type="number"
+          id="id_sleep_hours"
+          name="sleep_hours"
+          value="{{ profile.sleep_hours|default_if_none:'' }}"
+          placeholder="7.5"
+          step="0.5" min="0" max="24"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-row">
+          <input
+            type="checkbox"
+            name="takes_medication"
+            {% if profile.takes_medication %}checked{% endif %}
+          >
+          <span style="font-size: 0.9rem; color: var(--text-secondary);">Muntazam dori qabul qilaman</span>
+        </label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary">Digital Twin yaratish</button>
+
+  </form>
+
+</div>
+{% endblock %}

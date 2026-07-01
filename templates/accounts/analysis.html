@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tahlil — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">SIHHAT TAHLILI</p>
+    <h1 class="page-header__title">Xavf omillari</h1>
+    <p class="page-header__sub">Sizning ko'rsatkichlaringiz asosida</p>
+  </div>
+
+  <!-- Risk Factor Cards -->
+  {% if risk_factors %}
+    {% for factor in risk_factors %}
+      <div class="risk-factor-card level-{{ factor.level }}">
+        <span class="risk-factor__name">{{ factor.name }}</span>
+        <span class="risk-badge level-{{ factor.level }}">
+          {% if factor.level == 'high' %}Yuqori{% elif factor.level == 'medium' %}O'rta{% elif factor.level == 'low' %}Past{% else %}Eslatma{% endif %}
+        </span>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="glass-card" style="text-align: center; padding: 2rem; margin-bottom: 1rem;">
+      <p style="font-size: 1.5rem; margin-bottom: 0.5rem;">✓</p>
+      <p class="text-secondary">Hozircha aniq xavf omillari aniqlanmadi.</p>
+      <p class="text-dim text-sm" style="margin-top: 0.25rem;">Ma'lumotlaringizni yangilang.</p>
+    </div>
+  {% endif %}
+
+  <!-- AI Tavsiya Card -->
+  <div class="glass-card" style="border: 1px solid rgba(0,212,255,0.25); margin-top: 1.25rem; margin-bottom: 1rem;">
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4M12 16h.01"/>
+      </svg>
+      <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan);">AI TAVSIYA</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+
+      {% for factor in risk_factors %}
+
+        {% if factor.name == 'Qon glyukozasi' %}
+          <div style="display: flex; gap: 0.75rem;">
+            <span style="color: var(--danger); flex-shrink: 0; margin-top: 2px;">⬡</span>
+            <p class="text-sm text-secondary">
+              <strong style="color: var(--text-primary);">Qand darajasi:</strong>
+              Shakar va shirin ichimliklar iste'molini kamaytiring. Kuniga 3–4 marta kichik ovqatlanishni yo'lga qo'ying. Tibbiy ko'rik o'tkazishni kechiktirmang.
+            </p>
+          </div>
+        {% endif %}
+
+        {% if factor.name == 'Jismoniy faollik' %}
+          <div style="display: flex; gap: 0.75rem;">
+            <span style="color: var(--warning); flex-shrink: 0; margin-top: 2px;">⬡</span>
+            <p class="text-sm text-secondary">
+              <strong style="color: var(--text-primary);">Harakatlanish:</strong>
+              Har kuni qo'shimcha 2 000 qadam qo'shishga harakat qiling. Lift o'rniga zinadan foydalaning. 20 daqiqalik tez yurish yurak-qon tomir tizimini mustahkamlaydi.
+            </p>
+          </div>
+        {% endif %}
+
+        {% if factor.name == 'Uyqu davomiyligi' %}
+          <div style="display: flex; gap: 0.75rem;">
+            <span style="color: var(--warning); flex-shrink: 0; margin-top: 2px;">⬡</span>
+            <p class="text-sm text-secondary">
+              <strong style="color: var(--text-primary);">Uyqu:</strong>
+              Har kuni bir xil vaqtda yoting va turing. Uyqudan 1 soat oldin ekrandan voz keching. 7–9 soat uyqu immunitetni va moddalar almashinuvini yaxshilaydi.
+            </p>
+          </div>
+        {% endif %}
+
+        {% if factor.name == 'Dori qabul qilish' %}
+          <div style="display: flex; gap: 0.75rem;">
+            <span style="color: var(--cyan); flex-shrink: 0; margin-top: 2px;">⬡</span>
+            <p class="text-sm text-secondary">
+              <strong style="color: var(--text-primary);">Dori rejimi:</strong>
+              Dori qabul qilish jadvalini buzmaslikka harakat qiling. Shifokor bilan navbatdagi uchrashuvingizni rejalashtiring va hozirgi dorilarning samaradorligini muhokama qiling.
+            </p>
+          </div>
+        {% endif %}
+
+      {% empty %}
+        <div style="display: flex; gap: 0.75rem;">
+          <span style="color: var(--safe); flex-shrink: 0; margin-top: 2px;">⬡</span>
+          <p class="text-sm text-secondary">
+            <strong style="color: var(--text-primary);">Umumiy tavsiya:</strong>
+            Ko'rsatkichlaringiz yaxshi. Faol turmush tarzini davom ettiring, suvni yetarlicha iching va davriy tibbiy ko'riklarni o'tkazib turing.
+          </p>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <!-- BMI info card if available -->
+  {% if profile.bmi %}
+  <div class="glass-card" style="margin-bottom: 1rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <p style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 0.25rem;">TANA MASSASI INDEKSI</p>
+        <p style="font-size: 1.75rem; font-weight: 700;">{{ profile.bmi }}</p>
+      </div>
+      <div style="text-align: right;">
+        <p class="text-sm {% if profile.bmi >= 30 %}text-danger{% elif profile.bmi >= 25 %}text-warning{% else %}text-safe{% endif %}">
+          {% if profile.bmi >= 30 %}Semizlik{% elif profile.bmi >= 25 %}Ortiqcha vazn{% elif profile.bmi >= 18.5 %}Me'yorida{% else %}Past vazn{% endif %}
+        </p>
+        <p class="text-dim text-xs">Me'yor: 18.5 – 24.9</p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <a href="{% url 'profile' %}" class="btn-outline" style="display: flex; justify-content: center;">
+    Profilni tahrirlash
+  </a>
+
+</div>
+{% endblock %}

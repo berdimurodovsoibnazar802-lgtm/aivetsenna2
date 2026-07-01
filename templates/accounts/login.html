@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kirish — Alvitsenna{% endblock %}
+
+{% block content %}
+<div style="min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; padding: 2rem 0;">
+
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <p class="text-xs" style="letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem;">SIHHAT TIZIMI</p>
+    <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.03em;">Alvitsenna</h1>
+    <p class="text-secondary text-sm" style="margin-top: 0.25rem;">Raqamli sog'liq hamrohi</p>
+  </div>
+
+  <div class="glass-card">
+    <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem;">Hisobga kirish</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label" for="id_username">Foydalanuvchi nomi</label>
+        <input
+          type="text"
+          id="id_username"
+          name="username"
+          autocomplete="username"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_password">Parol</label>
+        <input
+          type="password"
+          id="id_password"
+          name="password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <button type="submit" class="btn-primary">Kirish</button>
+      </div>
+    </form>
+  </div>
+
+  <p class="text-center text-sm text-secondary" style="margin-top: 1.25rem;">
+    Hisob yo'qmi?
+    <a href="{% url 'register' %}" style="color: var(--cyan); text-decoration: none; font-weight: 600;">Ro'yxatdan o'tish</a>
+  </p>
+
+</div>
+{% endblock %}

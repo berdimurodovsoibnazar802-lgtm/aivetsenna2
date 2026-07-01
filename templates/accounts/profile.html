@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profil — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">HISOB</p>
+    <h1 class="page-header__title">{{ profile.full_name|default:request.user.username }}</h1>
+    <p class="page-header__sub">@{{ request.user.username }}</p>
+  </div>
+
+  <!-- Shaxsiy ma'lumotlar -->
+  <div class="glass-card" style="margin-bottom: 1rem;">
+    <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem;">SHAXSIY</p>
+
+    <div style="display: flex; flex-direction: column; gap: 0;">
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <span class="text-sm" style="color: var(--text-dim);">To'liq ism</span>
+        <span class="text-sm font-bold">{{ profile.full_name|default:'—' }}</span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <span class="text-sm" style="color: var(--text-dim);">Jinsi</span>
+        <span class="text-sm font-bold">{% if profile.gender == 'male' %}Erkak{% else %}Ayol{% endif %}</span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0;">
+        <span class="text-sm" style="color: var(--text-dim);">Yosh</span>
+        <span class="text-sm font-bold">{{ profile.age|default_if_none:'—' }}{% if profile.age %} yosh{% endif %}</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Jismoniy ko'rsatkichlar -->
+  <div class="glass-card" style="margin-bottom: 1rem;">
+    <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem;">JISMONIY</p>
+
+    <div style="display: flex; flex-direction: column; gap: 0;">
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <span class="text-sm" style="color: var(--text-dim);">Bo'y</span>
+        <span class="text-sm font-bold">{{ profile.height_cm|default_if_none:'—' }}{% if profile.height_cm %} sm{% endif %}</span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <span class="text-sm" style="color: var(--text-dim);">Vazn</span>
+        <span class="text-sm font-bold">{{ profile.weight_kg|default_if_none:'—' }}{% if profile.weight_kg %} kg{% endif %}</span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0;">
+        <span class="text-sm" style="color: var(--text-dim);">BMI</span>
+        <span class="text-sm font-bold {% if profile.bmi %}{% if profile.bmi >= 30 %}text-danger{% elif profile.bmi >= 25 %}text-warning{% else %}text-safe{% endif %}{% endif %}">
+          {{ profile.bmi|default_if_none:'—' }}
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Tibbiy ko'rsatkichlar -->
+  <div class="glass-card" style="margin-bottom: 1rem;">
+    <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem;">TIBBIY</p>
+
+    <div style="display: flex; flex-direction: column; gap: 0;">
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <span class="text-sm" style="color: var(--text-dim);">Qon glyukozasi</span>
+        <span class="text-sm font-bold">{{ profile.blood_glucose|default_if_none:'—' }}{% if profile.blood_glucose %} mmol/L{% endif %}</span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <span class="text-sm" style="color: var(--text-dim);">Qon bosimi</span>
+        <span class="text-sm font-bold">
+          {% if profile.bp_systolic and profile.bp_diastolic %}
+            {{ profile.bp_systolic }}/{{ profile.bp_diastolic }} mmHg
+          {% else %}—{% endif %}
+        </span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <span class="text-sm" style="color: var(--text-dim);">Kunlik qadam</span>
+        <span class="text-sm font-bold">{{ profile.daily_steps|default_if_none:'—' }}</span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle);">
+        <span class="text-sm" style="color: var(--text-dim);">Uyqu</span>
+        <span class="text-sm font-bold">{{ profile.sleep_hours|default_if_none:'—' }}{% if profile.sleep_hours %} soat{% endif %}</span>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0;">
+        <span class="text-sm" style="color: var(--text-dim);">Dori qabul</span>
+        <span class="text-sm font-bold {% if profile.takes_medication %}text-warning{% else %}text-safe{% endif %}">
+          {% if profile.takes_medication %}Ha{% else %}Yo'q{% endif %}
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Xavf ko'rsatkichi -->
+  <div class="glass-card" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <p style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 0.25rem;">XAVF DARAJASI</p>
+      <div class="risk-score {% if profile.risk_score >= 70 %}high{% elif profile.risk_score >= 40 %}medium{% endif %}" style="font-size: 2.5rem;">
+        {{ profile.risk_score }}
+      </div>
+    </div>
+    <a href="{% url 'onboarding' %}" class="btn-primary btn-sm" style="width: auto;">
+      Yangilash
+    </a>
+  </div>
+
+  <!-- Logout -->
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-outline" style="width: 100%;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+        <polyline points="16,17 21,12 16,7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Chiqish
+    </button>
+  </form>
+
+</div>
+{% endblock %}

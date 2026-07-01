@@ -1,0 +1,75 @@
+{% comment %}
+Registration progress stepper — 4 steps.
+Expects `current_step` integer (1–4) in context.
+{% endcomment %}
+<div style="width:100%; margin-bottom:2rem;">
+  <div style="display:flex; align-items:center; justify-content:center; gap:0; position:relative;">
+
+    {% for step in stepper_steps %}
+    {% with forloop.counter as n %}
+
+      {# Circle node #}
+      <div style="
+        display:flex; flex-direction:column; align-items:center;
+        position:relative; z-index:1; flex-shrink:0;
+      ">
+        <div style="
+          width:36px; height:36px; border-radius:50%;
+          display:flex; align-items:center; justify-content:center;
+          font-size:0.75rem; font-weight:700;
+          {% if n < current_step %}
+            background: rgba(0,212,255,0.15);
+            border: 1.5px solid var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 10px rgba(0,212,255,0.25);
+          {% elif n == current_step %}
+            background: rgba(0,212,255,0.18);
+            border: 2px solid var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 16px rgba(0,212,255,0.45), 0 0 4px rgba(0,212,255,0.3);
+          {% else %}
+            background: rgba(255,255,255,0.04);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.3);
+          {% endif %}
+        ">
+          {% if n < current_step %}
+            {# Checkmark SVG #}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <polyline points="3,8 6.5,11.5 13,5" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          {% else %}
+            {{ n }}
+          {% endif %}
+        </div>
+        <span style="
+          margin-top:6px;
+          font-size:0.6rem; font-weight:600; letter-spacing:0.04em;
+          text-align:center; white-space:nowrap; max-width:72px;
+          {% if n == current_step %}
+            color: var(--cyan);
+          {% elif n < current_step %}
+            color: rgba(0,212,255,0.6);
+          {% else %}
+            color: rgba(255,255,255,0.25);
+          {% endif %}
+        ">{{ step }}</span>
+      </div>
+
+      {# Connector line (not after last step) #}
+      {% if not forloop.last %}
+        <div style="
+          flex:1; height:1.5px; margin-bottom:18px;
+          {% if n < current_step %}
+            background: linear-gradient(90deg, var(--cyan), rgba(0,212,255,0.4));
+          {% else %}
+            background: rgba(255,255,255,0.08);
+          {% endif %}
+        "></div>
+      {% endif %}
+
+    {% endwith %}
+    {% endfor %}
+
+  </div>
+</div>

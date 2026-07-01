@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Ro'yxatdan o'tish — Alvitsenna{% endblock %}
+
+{% block content %}
+<div style="min-height:100dvh; display:flex; flex-direction:column; justify-content:center; padding:2rem 0 3rem;">
+
+  <!-- ── LOGO HEADER ─────────────────────────────────────────── -->
+  <div style="text-align:center; margin-bottom:1.75rem;">
+    <div style="
+      width:90px; height:90px; border-radius:50%;
+      background:#ffffff;
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 1rem;
+      overflow:hidden;
+      box-shadow: 0 0 0 2px rgba(0,212,255,0.35), 0 0 20px rgba(0,212,255,0.15);
+    ">
+      <img src="{% static 'img/avatars/logo.jpg' %}"
+           alt="Alvitsenna logotipi"
+           style="width:80px; height:80px; object-fit:cover; border-radius:50%;">
+    </div>
+    <h1 style="font-size:1.6rem; font-weight:800; letter-spacing:-0.02em; margin-bottom:0.2rem;">Alvitsenna</h1>
+    <p class="text-secondary text-sm">Sog'lig'ingizning aqlli raqamli egizagi</p>
+  </div>
+
+  <!-- ── STEPPER ────────────────────────────────────────────────── -->
+  {% include 'accounts/partials/_register_stepper.html' %}
+
+  <!-- ── FORM CARD ──────────────────────────────────────────────── -->
+  <div class="glass-card">
+    <h2 style="font-size:1.1rem; font-weight:700; margin-bottom:0.2rem;">Hisob ma'lumotlari</h2>
+    <p class="text-secondary text-sm" style="margin-bottom:1.5rem;">Iltimos, hisobingiz uchun ma'lumotlarni kiriting</p>
+
+    <form method="post" novalidate autocomplete="off">
+      {% csrf_token %}
+
+      <!-- Ism -->
+      <div class="form-group">
+        <label class="form-label" for="id_first_name">Ism</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </span>
+          <input type="text" id="id_first_name" name="first_name"
+                 value="{{ post.first_name|default:'' }}"
+                 placeholder="Ismoil"
+                 style="padding-left:2.5rem;"
+                 autocomplete="given-name">
+        </div>
+        {% if errors.first_name %}<p class="form-error">{{ errors.first_name }}</p>{% endif %}
+      </div>
+
+      <!-- Familiya -->
+      <div class="form-group">
+        <label class="form-label" for="id_last_name">Familiya</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </span>
+          <input type="text" id="id_last_name" name="last_name"
+                 value="{{ post.last_name|default:'' }}"
+                 placeholder="Karimov"
+                 style="padding-left:2.5rem;"
+                 autocomplete="family-name">
+        </div>
+        {% if errors.last_name %}<p class="form-error">{{ errors.last_name }}</p>{% endif %}
+      </div>
+
+      <!-- E-mail -->
+      <div class="form-group">
+        <label class="form-label" for="id_email">E-mail</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+          </span>
+          <input type="email" id="id_email" name="email"
+                 value="{{ post.email|default:'' }}"
+                 placeholder="ismoil@email.com"
+                 style="padding-left:2.5rem;"
+                 autocomplete="email">
+        </div>
+        {% if errors.email %}<p class="form-error">{{ errors.email }}</p>{% endif %}
+      </div>
+
+      <!-- Telefon raqam -->
+      <div class="form-group">
+        <label class="form-label" for="id_phone">Telefon raqam</label>
+        <div style="position:relative; display:flex; gap:0.5rem;">
+          <div style="
+            display:flex; align-items:center; gap:0.4rem;
+            background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+            border-radius:12px; padding:0 0.85rem;
+            font-size:0.9375rem; font-weight:600; color:var(--text-secondary);
+            flex-shrink:0; white-space:nowrap;
+          ">
+            <span style="font-size:1rem;">🇺🇿</span> +998
+          </div>
+          <input type="tel" id="id_phone" name="phone_number"
+                 value="{{ post.phone_number|default:'' }}"
+                 placeholder="90 123 45 67"
+                 style="flex:1;"
+                 autocomplete="tel-national"
+                 maxlength="12">
+        </div>
+        {% if errors.phone_number %}<p class="form-error">{{ errors.phone_number }}</p>{% endif %}
+      </div>
+
+      <!-- Parol -->
+      <div class="form-group">
+        <label class="form-label" for="id_password">Parol</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </span>
+          <input type="password" id="id_password" name="password"
+                 placeholder="••••••••"
+                 style="padding-left:2.5rem;"
+                 autocomplete="new-password">
+        </div>
+        {% if errors.password %}<p class="form-error">{{ errors.password }}</p>{% endif %}
+      </div>
+
+      <!-- Parolni tasdiqlang -->
+      <div class="form-group">
+        <label class="form-label" for="id_password2">Parolni tasdiqlang</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><path d="M9 16l2 2 4-4"/></svg>
+          </span>
+          <input type="password" id="id_password2" name="password2"
+                 placeholder="••••••••"
+                 style="padding-left:2.5rem;"
+                 autocomplete="new-password">
+        </div>
+        {% if errors.password2 %}<p class="form-error">{{ errors.password2 }}</p>{% endif %}
+      </div>
+
+      <!-- Password requirements checklist -->
+      <div style="
+        background:rgba(0,212,255,0.05); border:1px solid rgba(0,212,255,0.12);
+        border-radius:10px; padding:0.875rem 1rem; margin-bottom:1.25rem;
+      ">
+        <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.6rem;">PAROL TALABLARI</p>
+        <div style="display:flex; flex-direction:column; gap:0.35rem;">
+          <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8rem; color:var(--text-secondary);">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6" stroke="rgba(255,255,255,0.2)" stroke-width="1"/><polyline points="3.5,6.5 5.5,8.5 9.5,4.5" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Kamida 8 ta belgi
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8rem; color:var(--text-secondary);">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6" stroke="rgba(255,255,255,0.2)" stroke-width="1"/><polyline points="3.5,6.5 5.5,8.5 9.5,4.5" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Katta va kichik harflar
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8rem; color:var(--text-secondary);">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6" stroke="rgba(255,255,255,0.2)" stroke-width="1"/><polyline points="3.5,6.5 5.5,8.5 9.5,4.5" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Raqam va maxsus belgi
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-primary" style="display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+        Davom etish
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+    </form>
+
+    <!-- ── SOCIAL DIVIDER ──────────────────────────────────── -->
+    <div style="display:flex; align-items:center; gap:0.75rem; margin:1.25rem 0;">
+      <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
+      <span style="font-size:0.78rem; color:var(--text-dim); font-weight:500;">yoki</span>
+      <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
+    </div>
+
+    <!-- Social pill buttons -->
+    <div style="display:flex; flex-direction:column; gap:0.6rem;">
+
+      <button type="button" onclick="showSoon(this)" class="btn-outline" style="display:flex; align-items:center; justify-content:center; gap:0.65rem; font-size:0.875rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google orqali davom etish
+      </button>
+
+      <button type="button" onclick="showSoon(this)" class="btn-outline" style="display:flex; align-items:center; justify-content:center; gap:0.65rem; font-size:0.875rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Apple orqali davom etish
+      </button>
+
+      <button type="button" onclick="showSoon(this)" class="btn-outline" style="display:flex; align-items:center; justify-content:center; gap:0.65rem; font-size:0.875rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24-.01.38z" fill="#2AABEE"/></svg>
+        Telegram orqali davom etish
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Terms -->
+  <p style="text-align:center; font-size:0.72rem; color:var(--text-dim); margin-top:1.25rem; line-height:1.6; padding:0 0.5rem;">
+    Davom etish orqali siz Alvitsenna'ning
+    <a href="#" style="color:var(--text-secondary); text-decoration:underline; text-underline-offset:2px;">Foydalanish shartlari</a>
+    va
+    <a href="#" style="color:var(--text-secondary); text-decoration:underline; text-underline-offset:2px;">Maxfiylik siyosatiga</a>
+    rozilik bildirasiz.
+  </p>
+
+  <p class="text-center text-sm text-secondary" style="margin-top:0.75rem;">
+    Hisobingiz bormi?
+    <a href="{% url 'login' %}" style="color:var(--cyan); text-decoration:none; font-weight:600;">Kirish</a>
+  </p>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showSoon(btn) {
+  const orig = btn.textContent.trim();
+  btn.textContent = 'Tez orada mavjud bo\'ladi';
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
+  setTimeout(() => {
+    btn.innerHTML = btn.innerHTML; // noop reset — just re-enable
+    btn.disabled = false;
+    btn.style.opacity = '';
+    // restore original label
+    btn.textContent = orig;
+  }, 2200);
+}
+</script>
+{% endblock %}

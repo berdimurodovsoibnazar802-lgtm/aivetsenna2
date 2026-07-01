@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Ma'lumotlaringiz — Alvitsenna{% endblock %}
+
+{% block content %}
+<div style="min-height:100dvh; display:flex; flex-direction:column; justify-content:center; padding:2rem 0 3rem;">
+
+  <!-- ── LOGO HEADER ─────────────────────────────────────────── -->
+  <div style="text-align:center; margin-bottom:1.75rem;">
+    <div style="
+      width:90px; height:90px; border-radius:50%;
+      background:#ffffff;
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 1rem; overflow:hidden;
+      box-shadow: 0 0 0 2px rgba(0,212,255,0.35), 0 0 20px rgba(0,212,255,0.15);
+    ">
+      <img src="{% static 'img/avatars/logo.jpg' %}"
+           alt="Alvitsenna logotipi"
+           style="width:80px; height:80px; object-fit:cover; border-radius:50%;">
+    </div>
+    <h1 style="font-size:1.6rem; font-weight:800; letter-spacing:-0.02em; margin-bottom:0.2rem;">Alvitsenna</h1>
+    <p class="text-secondary text-sm">Sog'lig'ingizning aqlli raqamli egizagi</p>
+  </div>
+
+  <!-- ── STEPPER ─────────────────────────────────────────────── -->
+  {% include 'accounts/partials/_register_stepper.html' %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <!-- ── SHAXSIY MA'LUMOTLAR ─────────────────────────────── -->
+    <div class="glass-card" style="margin-bottom:0.875rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:1.1rem;">SHAXSIY MA'LUMOTLAR</p>
+
+      <!-- Ism + Familiya: read-only display from step 1 -->
+      <div class="stat-grid" style="margin-bottom:1rem;">
+        <div>
+          <p class="form-label">Ism</p>
+          <div style="
+            background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle);
+            border-radius:12px; padding:0.75rem 1rem;
+            font-size:0.9375rem; color:var(--text-secondary);
+          ">{{ request.user.first_name|default:'—' }}</div>
+        </div>
+        <div>
+          <p class="form-label">Familiya</p>
+          <div style="
+            background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle);
+            border-radius:12px; padding:0.75rem 1rem;
+            font-size:0.9375rem; color:var(--text-secondary);
+          ">{{ request.user.last_name|default:'—' }}</div>
+        </div>
+      </div>
+
+      <!-- Tug'ilgan sana -->
+      <div class="form-group">
+        <label class="form-label" for="id_birth_date">Tug'ilgan sana</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </span>
+          <input type="date" id="id_birth_date" name="birth_date"
+                 value="{{ post.birth_date|default:profile.birth_date|date:'Y-m-d'|default:'' }}"
+                 style="padding-left:2.5rem;"
+                 max="{% now 'Y-m-d' %}">
+        </div>
+        {% if errors.birth_date %}<p class="form-error">{{ errors.birth_date }}</p>{% endif %}
+      </div>
+
+      <!-- Jins -->
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">Jins</label>
+        <div style="display:flex; gap:0.625rem;">
+          {% for val, label in profile.GENDER_CHOICES %}
+          <label style="
+            flex:1; display:flex; align-items:center; justify-content:center; gap:0.5rem;
+            padding:0.75rem; border-radius:12px; cursor:pointer;
+            border:1.5px solid {% if post.gender == val or not post and profile.gender == val %}var(--cyan){% else %}var(--border-subtle){% endif %};
+            background:{% if post.gender == val or not post and profile.gender == val %}rgba(0,212,255,0.1){% else %}rgba(255,255,255,0.03){% endif %};
+            font-size:0.9rem; font-weight:{% if post.gender == val or not post and profile.gender == val %}600{% else %}400{% endif %};
+            color:{% if post.gender == val or not post and profile.gender == val %}var(--cyan){% else %}var(--text-secondary){% endif %};
+            transition: all 0.15s ease;
+          ">
+            <input type="radio" name="gender" value="{{ val }}"
+                   {% if post.gender == val or not post and profile.gender == val %}checked{% endif %}
+                   style="display:none;">
+            {% if val == 'male' %}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><path d="M17 3h4v4M14.5 9.5L21 3"/></svg>
+            {% else %}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="7"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="9" y1="19" x2="15" y2="19"/></svg>
+            {% endif %}
+            {{ label }}
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ALOQA MA'LUMOTLARI ──────────────────────────────── -->
+    <div class="glass-card" style="margin-bottom:0.875rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:1.1rem;">ALOQA MA'LUMOTLARI</p>
+
+      <div class="form-group">
+        <p class="form-label">E-mail</p>
+        <div style="
+          background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle);
+          border-radius:12px; padding:0.75rem 1rem;
+          font-size:0.9375rem; color:var(--text-secondary);
+          display:flex; align-items:center; gap:0.6rem;
+        ">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="flex-shrink:0; color:var(--text-dim);"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+          {{ request.user.email|default:'—' }}
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:0;">
+        <p class="form-label">Telefon raqam</p>
+        <div style="
+          background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle);
+          border-radius:12px; padding:0.75rem 1rem;
+          font-size:0.9375rem; color:var(--text-secondary);
+          display:flex; align-items:center; gap:0.6rem;
+        ">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="flex-shrink:0; color:var(--text-dim);"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.09 5.18 2 2 0 015.09 3h3a2 2 0 012 1.72c.13 1 .36 1.98.71 2.91a2 2 0 01-.45 2.11L9.91 10a16 16 0 006 6l.45-.45a2 2 0 012.11-.45c.93.35 1.91.58 2.91.71A2 2 0 0122 16.92z"/></svg>
+          {{ profile.phone_number|default:'—' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MANZIL (ixtiyoriy) ──────────────────────────────── -->
+    <div class="glass-card" style="margin-bottom:0.875rem;">
+      <div style="display:flex; align-items:baseline; gap:0.5rem; margin-bottom:1.1rem;">
+        <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan);">MANZIL MA'LUMOTLARI</p>
+        <span style="font-size:0.65rem; color:var(--text-dim); font-style:italic;">ixtiyoriy</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_region">Viloyat / Shahar</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          </span>
+          <select id="id_region" name="region" style="padding-left:2.5rem;">
+            <option value="">— Tanlang —</option>
+            {% for r in uz_regions %}
+            <option value="{{ r }}" {% if post.region == r or not post and profile.region == r %}selected{% endif %}>{{ r }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_district">Tuman</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          </span>
+          <input type="text" id="id_district" name="district"
+                 value="{{ post.district|default:profile.district }}"
+                 placeholder="Tuman nomini kiriting"
+                 style="padding-left:2.5rem;">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" for="id_address">Manzil</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:0.85rem; color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          </span>
+          <textarea id="id_address" name="address" rows="2"
+                    placeholder="Ko'cha, uy raqami"
+                    style="padding-left:2.5rem; padding-top:0.75rem; resize:none;">{{ post.address|default:profile.address }}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── KASB VA FAOLIYAT (ixtiyoriy) ───────────────────── -->
+    <div class="glass-card" style="margin-bottom:1.25rem;">
+      <div style="display:flex; align-items:baseline; gap:0.5rem; margin-bottom:1.1rem;">
+        <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan);">KASB VA FAOLIYAT</p>
+        <span style="font-size:0.65rem; color:var(--text-dim); font-style:italic;">ixtiyoriy</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="id_profession">Kasb / Mutaxassislik</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-dim); display:flex;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+          </span>
+          <input type="text" id="id_profession" name="profession"
+                 value="{{ post.profession|default:profile.profession }}"
+                 placeholder="Masalan: Shifokor, Muhandis, O'qituvchi"
+                 style="padding-left:2.5rem;">
+        </div>
+      </div>
+
+      <!-- Faoliyat turi — styled radio pills -->
+      <div class="form-group" style="margin-bottom:0;">
+        <p class="form-label">Faoliyat turi</p>
+        <div style="display:flex; gap:0.625rem;">
+          {% for val, label in profile.ACTIVITY_CHOICES %}
+          {% with is_selected=post.activity_type %}
+          <label id="act_label_{{ val }}" style="
+            flex:1; display:flex; align-items:center; justify-content:center;
+            padding:0.65rem 0.5rem; border-radius:12px; cursor:pointer;
+            border:1.5px solid var(--border-subtle);
+            background:rgba(255,255,255,0.03);
+            font-size:0.825rem; font-weight:500;
+            color:var(--text-secondary);
+            transition: all 0.15s ease;
+            text-align:center;
+          ">
+            <input type="radio" name="activity_type" value="{{ val }}"
+                   {% if post.activity_type == val or not post.activity_type and profile.activity_type == val %}checked{% endif %}
+                   style="display:none;"
+                   onchange="highlightActivity('{{ val }}')">
+            {{ label }}
+          </label>
+          {% endwith %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SUBMIT ───────────────────────────────────────────── -->
+    <button type="submit" class="btn-primary" style="display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+      Davom etish
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+
+  </form>
+
+  <p class="text-center text-sm text-secondary" style="margin-top:1.25rem;">
+    <a href="{% url 'register' %}" style="color:var(--text-dim); text-decoration:none;">
+      ← Oldingi qadam
+    </a>
+  </p>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Highlight activity radio pills on page load and on change
+function highlightActivity(selected) {
+  {% for val, label in profile.ACTIVITY_CHOICES %}
+  (function() {
+    var lbl = document.getElementById('act_label_{{ val }}');
+    var active = selected === '{{ val }}';
+    lbl.style.borderColor  = active ? 'var(--cyan)'                   : 'var(--border-subtle)';
+    lbl.style.background   = active ? 'rgba(0,212,255,0.1)'           : 'rgba(255,255,255,0.03)';
+    lbl.style.color        = active ? 'var(--cyan)'                   : 'var(--text-secondary)';
+    lbl.style.fontWeight   = active ? '600'                            : '500';
+  })();
+  {% endfor %}
+}
+
+// Highlight gender radio cards on change
+document.querySelectorAll('input[name="gender"]').forEach(function(radio) {
+  radio.addEventListener('change', function() {
+    document.querySelectorAll('input[name="gender"]').forEach(function(r) {
+      var card = r.closest('label');
+      var on = r.checked;
+      card.style.borderColor = on ? 'var(--cyan)'           : 'var(--border-subtle)';
+      card.style.background  = on ? 'rgba(0,212,255,0.1)'  : 'rgba(255,255,255,0.03)';
+      card.style.color       = on ? 'var(--cyan)'           : 'var(--text-secondary)';
+      card.style.fontWeight  = on ? '600'                   : '400';
+    });
+  });
+});
+
+// Init activity highlight from server-rendered checked state
+(function() {
+  var checked = document.querySelector('input[name="activity_type"]:checked');
+  if (checked) highlightActivity(checked.value);
+})();
+</script>
+{% endblock %}
