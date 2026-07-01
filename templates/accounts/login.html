@@ -3,53 +3,306 @@
 
 {% block title %}Kirish — Alvitsenna{% endblock %}
 
+{% block extra_head %}
+<style>
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50%       { opacity: 0.9;  transform: scale(1.12); }
+  }
+  @keyframes floatDot {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.18; }
+    50%       { transform: translateY(-18px) scale(1.15); opacity: 0.32; }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .login-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .login-input-wrap .inp-icon {
+    position: absolute;
+    left: 0.875rem;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+  }
+  .login-input-wrap input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 0.7rem 0.875rem 0.7rem 2.75rem;
+    color: #fff;
+    font-size: 0.9375rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+  }
+  .login-input-wrap input:focus {
+    border-color: #00D4FF;
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.12);
+  }
+  .login-input-wrap input:-webkit-autofill,
+  .login-input-wrap input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 100px #0a1628 inset;
+    -webkit-text-fill-color: #fff;
+    caret-color: #fff;
+  }
+  .pw-toggle {
+    position: absolute;
+    right: 0.875rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: rgba(255,255,255,0.35);
+  }
+  .pw-toggle:hover { color: rgba(255,255,255,0.65); }
+
+  .quick-card {
+    flex: 1;
+    border-radius: 12px;
+    padding: 0.875rem 0.75rem;
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  .quick-card:hover {
+    transform: translateY(-2px);
+  }
+  .quick-card-doctor {
+    background: rgba(0,255,136,0.07);
+    border: 1px solid rgba(0,255,136,0.25);
+  }
+  .quick-card-doctor:hover {
+    box-shadow: 0 4px 20px rgba(0,255,136,0.18);
+  }
+  .quick-card-patient {
+    background: rgba(0,212,255,0.07);
+    border: 1px solid rgba(0,212,255,0.25);
+  }
+  .quick-card-patient:hover {
+    box-shadow: 0 4px 20px rgba(0,212,255,0.18);
+  }
+
+  .float-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,255,0.45) 0%, transparent 70%);
+    animation: floatDot linear infinite;
+    pointer-events: none;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div style="min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; padding: 2rem 0;">
+<div style="min-height:100dvh; display:flex; flex-direction:column; justify-content:center; padding:2rem 0; position:relative; overflow:hidden; background:#050A18;">
 
-  <div style="text-align: center; margin-bottom: 2rem;">
-    <p class="text-xs" style="letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem;">SIHHAT TIZIMI</p>
-    <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.03em;">Alvitsenna</h1>
-    <p class="text-secondary text-sm" style="margin-top: 0.25rem;">Raqamli sog'liq hamrohi</p>
+  <!-- Cyan radial gradient top -->
+  <div style="position:absolute; top:-120px; left:50%; transform:translateX(-50%); width:420px; height:420px; background:radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 65%); pointer-events:none;"></div>
+
+  <!-- Floating ambient dots -->
+  <div class="float-dot" style="width:60px; height:60px; top:8%; left:6%;  animation-duration:7s;  animation-delay:0s;"></div>
+  <div class="float-dot" style="width:30px; height:30px; top:18%; right:10%; animation-duration:9s;  animation-delay:1.5s;"></div>
+  <div class="float-dot" style="width:45px; height:45px; top:55%; left:3%;  animation-duration:11s; animation-delay:3s;"></div>
+  <div class="float-dot" style="width:20px; height:20px; top:72%; right:6%; animation-duration:8s;  animation-delay:0.8s;"></div>
+  <div class="float-dot" style="width:35px; height:35px; bottom:10%; left:20%; animation-duration:10s; animation-delay:2.2s;"></div>
+
+  <!-- Content wrapper -->
+  <div style="position:relative; z-index:1; animation: fadeSlideUp 0.55s ease both;">
+
+    <!-- TOP SECTION -->
+    <div style="text-align:center; margin-bottom:2rem;">
+
+      <div style="text-align:center; margin-bottom:24px;">
+        <img src="{% static 'img/avatars/logo.jpg' %}"
+             alt="Alvitsenna logo"
+             style="width:110px;
+                    height:110px;
+                    border-radius:50%;
+                    object-fit:cover;
+                    border: 2px solid #00D4FF;
+                    box-shadow: 0 0 30px rgba(0,212,255,0.5),
+                                0 0 60px rgba(0,212,255,0.2);">
+      </div>
+
+      <h1 style="font-size:2.1rem; font-weight:900; letter-spacing:-0.03em; color:#fff; margin:0 0 0.3rem;">Alvitsenna</h1>
+      <p style="font-size:0.85rem; font-weight:500; color:#00D4FF; letter-spacing:0.04em; margin:0;">Raqamli sog'liq hamrohi</p>
+    </div>
+
+    <!-- FORM CARD -->
+    <div style="
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,212,255,0.18);
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem;
+      margin-bottom: 1rem;
+    ">
+      <h2 style="font-size:1rem; font-weight:700; color:#fff; margin:0 0 1.25rem; letter-spacing:0.01em;">Hisobga kirish</h2>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div style="background:rgba(255,59,92,0.1); border:1px solid rgba(255,59,92,0.3); border-radius:8px; padding:0.6rem 0.875rem; margin-bottom:1rem; font-size:0.825rem; color:#FF3B5C;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Username -->
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.72rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:0.45rem;">
+            Foydalanuvchi nomi
+          </label>
+          <div class="login-input-wrap">
+            <span class="inp-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,212,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="id_username"
+              name="username"
+              autocomplete="username"
+              placeholder="Foydalanuvchi nomi"
+              required>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div style="margin-bottom:1.5rem;">
+          <label style="display:block; font-size:0.72rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:0.45rem;">
+            Parol
+          </label>
+          <div class="login-input-wrap">
+            <span class="inp-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,212,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+            </span>
+            <input
+              type="password"
+              id="id_password"
+              name="password"
+              autocomplete="current-password"
+              placeholder="••••••••"
+              style="padding-right:2.75rem;"
+              required>
+            <button type="button" class="pw-toggle" onclick="togglePassword()" id="pw-toggle-btn" aria-label="Parolni ko'rsatish">
+              <svg id="eye-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" style="
+          width:100%; padding:0.8rem; border:none; border-radius:10px; cursor:pointer;
+          background: linear-gradient(135deg, #00D4FF 0%, #7B2FFF 100%);
+          color:#fff; font-size:0.9375rem; font-weight:700; letter-spacing:0.02em;
+          box-shadow: 0 4px 18px rgba(0,212,255,0.25);
+          transition: opacity 0.18s, transform 0.18s;
+        "
+        onmouseover="this.style.opacity='0.88'"
+        onmouseout="this.style.opacity='1'">
+          Kirish
+        </button>
+      </form>
+    </div>
+
+    <!-- Hint -->
+    <p style="text-align:center; font-size:0.73rem; color:rgba(255,255,255,0.3); margin-bottom:1.25rem; line-height:1.55;">
+      Shifokor sifatida kirish uchun shifokor hisobingizdan foydalaning
+    </p>
+
+    <!-- TEZKOR KIRISH -->
+    <div>
+      <p style="font-size:0.63rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.3); text-align:center; margin-bottom:0.75rem;">TEZKOR KIRISH</p>
+      <div style="display:flex; gap:0.625rem;">
+
+        <!-- Doctor card -->
+        <button onclick="quickLogin('doctor1','Doctor123!')" style="
+          flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(0,255,136,0.3);
+          border-radius:16px; padding:16px; cursor:pointer; text-align:left;
+          transition: border-color 0.2s, box-shadow 0.2s;"
+          onmouseover="this.style.borderColor='#00FF88'; this.style.boxShadow='0 0 20px rgba(0,255,136,0.2)';"
+          onmouseout="this.style.borderColor='rgba(0,255,136,0.3)'; this.style.boxShadow='none';">
+          <div style="margin-bottom:0.75rem;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00FF88" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.45rem; margin-bottom:0.3rem;">
+            <div style="width:7px; height:7px; border-radius:50%; background:#00FF88; box-shadow:0 0 6px rgba(0,255,136,0.8); flex-shrink:0;"></div>
+            <p style="font-size:0.8125rem; font-weight:700; color:#fff; margin:0;">Sardor Holmatov</p>
+          </div>
+          <p style="font-size:0.7rem; color:#00FF88; margin:0; padding-left:0.95rem;">Shifokor</p>
+        </button>
+
+        <!-- Patient card -->
+        <button onclick="quickLogin('aziz','Patient123!')" style="
+          flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(0,212,255,0.3);
+          border-radius:16px; padding:16px; cursor:pointer; text-align:left;
+          transition: border-color 0.2s, box-shadow 0.2s;"
+          onmouseover="this.style.borderColor='#00D4FF'; this.style.boxShadow='0 0 20px rgba(0,212,255,0.2)';"
+          onmouseout="this.style.borderColor='rgba(0,212,255,0.3)'; this.style.boxShadow='none';">
+          <div style="margin-bottom:0.75rem;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.45rem; margin-bottom:0.3rem;">
+            <div style="width:7px; height:7px; border-radius:50%; background:#00D4FF; box-shadow:0 0 6px rgba(0,212,255,0.8); flex-shrink:0;"></div>
+            <p style="font-size:0.8125rem; font-weight:700; color:#fff; margin:0;">Aziz Karimov</p>
+          </div>
+          <p style="font-size:0.7rem; color:#00D4FF; margin:0; padding-left:0.95rem;">Bemor · Diabet tip 2</p>
+        </button>
+
+      </div>
+    </div>
+
+    <p style="text-align:center; font-size:0.8125rem; color:rgba(255,255,255,0.45); margin-top:1.5rem;">
+      Hisob yo'qmi?
+      <a href="{% url 'register' %}" style="color:#00D4FF; text-decoration:none; font-weight:600;">Ro'yxatdan o'tish</a>
+    </p>
+
   </div>
-
-  <div class="glass-card">
-    <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem;">Hisobga kirish</h2>
-
-    <form method="post" novalidate>
-      {% csrf_token %}
-
-      <div class="form-group">
-        <label class="form-label" for="id_username">Foydalanuvchi nomi</label>
-        <input
-          type="text"
-          id="id_username"
-          name="username"
-          autocomplete="username"
-          required
-        >
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="id_password">Parol</label>
-        <input
-          type="password"
-          id="id_password"
-          name="password"
-          autocomplete="current-password"
-          required
-        >
-      </div>
-
-      <div style="margin-top: 1.5rem;">
-        <button type="submit" class="btn-primary">Kirish</button>
-      </div>
-    </form>
-  </div>
-
-  <p class="text-center text-sm text-secondary" style="margin-top: 1.25rem;">
-    Hisob yo'qmi?
-    <a href="{% url 'register' %}" style="color: var(--cyan); text-decoration: none; font-weight: 600;">Ro'yxatdan o'tish</a>
-  </p>
-
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function quickLogin(username, password) {
+    document.getElementById('id_username').value = username;
+    document.getElementById('id_password').value = password;
+    document.querySelector('form').submit();
+  }
+
+  function togglePassword() {
+    var inp = document.getElementById('id_password');
+    var icon = document.getElementById('eye-icon');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+      inp.type = 'password';
+      icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+  }
+</script>
 {% endblock %}

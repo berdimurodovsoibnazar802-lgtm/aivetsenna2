@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Ogohlantirishlar — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">OGOHLANTIRISHLAR</p>
+    <h1 class="page-header__title">
+      Xabarnomalar
+      {% if unread_count > 0 %}
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:#FF3B5C; font-size:0.75rem; font-weight:700; color:#fff; margin-left:0.4rem; vertical-align:middle;">{{ unread_count }}</span>
+      {% endif %}
+    </h1>
+    <p class="page-header__sub">
+      {% if unread_count > 0 %}{{ unread_count }} ta o'qilmagan xabar{% else %}Barcha xabarlar o'qilgan{% endif %}
+    </p>
+  </div>
+
+  {% if not alerts %}
+  <div class="glass-card" style="text-align:center; padding:2.5rem 1.25rem; color:var(--text-dim);">
+    <p style="font-size:1.5rem; margin-bottom:0.5rem;">🔔</p>
+    <p style="font-size:0.9rem;">Ogohlantirishlar yo'q</p>
+  </div>
+  {% endif %}
+
+  <div style="display:flex; flex-direction:column; gap:0.625rem;">
+  {% for alert in alerts %}
+    <div style="
+      border-radius:12px; padding:1rem 1.25rem;
+      border: 1px solid {% if not alert.is_read %}{% if alert.alert_type == 'high_glucose' or alert.alert_type == 'low_glucose' or alert.alert_type == 'high_bp' %}rgba(255,59,92,0.4){% else %}rgba(255,178,59,0.35){% endif %}{% else %}var(--border-subtle){% endif %};
+      background: {% if not alert.is_read %}{% if alert.alert_type == 'high_glucose' or alert.alert_type == 'low_glucose' or alert.alert_type == 'high_bp' %}rgba(255,59,92,0.07){% else %}rgba(255,178,59,0.06){% endif %}{% else %}rgba(255,255,255,0.02){% endif %};
+    ">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.75rem;">
+        <div style="flex:1;">
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+            {% if not alert.is_read %}
+              <div style="width:7px; height:7px; border-radius:50%; flex-shrink:0;
+                {% if alert.alert_type == 'high_glucose' or alert.alert_type == 'low_glucose' or alert.alert_type == 'high_bp' %}background:#FF3B5C;{% else %}background:#FFB23B;{% endif %}">
+              </div>
+            {% endif %}
+            <span class="risk-badge
+              {% if alert.alert_type == 'high_glucose' or alert.alert_type == 'low_glucose' or alert.alert_type == 'high_bp' %}level-high
+              {% elif alert.alert_type == 'missed_medicine' or alert.alert_type == 'side_effects' %}level-medium
+              {% else %}level-note{% endif %}">
+              {{ alert.get_alert_type_display }}
+            </span>
+          </div>
+          <p style="font-size:0.875rem; color:{% if not alert.is_read %}var(--text-primary){% else %}var(--text-secondary){% endif %}; margin-bottom:0.3rem;">
+            {{ alert.message }}
+          </p>
+          <p style="font-size:0.72rem; color:var(--text-dim);">
+            {{ alert.created_at|date:"d.m.Y H:i" }}
+          </p>
+        </div>
+        {% if not alert.is_read %}
+        <form method="post" action="{% url 'mark_alert_read' alert.id %}" style="flex-shrink:0;">
+          {% csrf_token %}
+          <button type="submit" style="
+            background:rgba(255,255,255,0.06); border:1px solid var(--border-subtle);
+            border-radius:8px; padding:0.35rem 0.7rem; color:var(--text-secondary);
+            font-size:0.75rem; cursor:pointer; white-space:nowrap;">
+            O'qildi
+          </button>
+        </form>
+        {% else %}
+        <span style="font-size:0.72rem; color:var(--text-dim); flex-shrink:0; padding-top:0.15rem;">✓ O'qildi</span>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+
+  <div style="margin-top:1rem;">
+    <a href="{% url 'dashboard' %}" class="btn-outline" style="display:flex; justify-content:center;">
+      ← Bosh sahifa
+    </a>
+  </div>
+
+</div>
+{% endblock %}

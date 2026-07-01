@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+
+{% block title %}30 kunlik monitoring — Alvitsenna{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">30 KUNLIK MONITORING</p>
+    <h1 class="page-header__title">{{ patient.full_name|default:patient.user.get_full_name }}</h1>
+    <p class="page-header__sub">
+      {{ patient.get_diabetes_type_display|default:"Diabet turi ko'rsatilmagan" }}
+      {% if patient.age %} · {{ patient.age }} yosh{% endif %}
+    </p>
+  </div>
+
+  <!-- Glucose chart -->
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:1rem;">
+      QON SHAKAR DINAMIKASI (mmol/L)
+    </p>
+    <div style="position:relative; height:200px;">
+      <canvas id="glucoseChart"></canvas>
+    </div>
+    <div style="display:flex; gap:1.25rem; margin-top:0.75rem; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:0.4rem;">
+        <div style="width:20px; height:2px; background:#00D4FF;"></div>
+        <span style="font-size:0.75rem; color:var(--text-dim);">Glyukoza</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.4rem;">
+        <div style="width:20px; height:2px; background:#FF3B5C; opacity:0.7;"></div>
+        <span style="font-size:0.75rem; color:var(--text-dim);">Xavf chegarasi (11.1)</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.4rem;">
+        <div style="width:20px; height:2px; background:#00FF88; opacity:0.7;"></div>
+        <span style="font-size:0.75rem; color:var(--text-dim);">Xavfsiz zona (7.0)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adherence chart -->
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:1rem;">
+      DORI QABUL QILISH
+    </p>
+    <div style="position:relative; height:120px;">
+      <canvas id="adherenceChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="stat-grid" style="margin-bottom:1rem;">
+    <div class="stat-cell">
+      <span class="stat-cell__label">O'rtacha glyukoza</span>
+      <span class="stat-cell__value">9.2 <span style="font-size:0.75rem; font-weight:400; color:var(--text-dim);">mmol/L</span></span>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-cell__label">Dori qabul</span>
+      <span class="stat-cell__value">80<span style="font-size:0.75rem; font-weight:400; color:var(--text-dim);">%</span></span>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-cell__label">Yuqori kun</span>
+      <span class="stat-cell__value">8 <span style="font-size:0.75rem; font-weight:400; color:var(--text-dim);">kun</span></span>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-cell__label">Simptomlar</span>
+      <span class="stat-cell__value">3 <span style="font-size:0.75rem; font-weight:400; color:var(--text-dim);">ta</span></span>
+    </div>
+  </div>
+
+  <!-- Daily table -->
+  <div class="glass-card" style="margin-bottom:1rem; padding:0; overflow:hidden;">
+    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); padding:1rem 1.25rem 0.75rem;">
+      KUNLIK JADVAL
+    </p>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.78rem;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border-subtle);">
+            <th style="padding:0.5rem 1rem; text-align:left; color:var(--text-dim); font-weight:600; white-space:nowrap;">Sana</th>
+            <th style="padding:0.5rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:600;">Glyukoza</th>
+            <th style="padding:0.5rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:600;">Qon bosimi</th>
+            <th style="padding:0.5rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:600;">Dori</th>
+            <th style="padding:0.5rem 0.5rem; text-align:center; color:var(--text-dim); font-weight:600;">Simptoм</th>
+            <th style="padding:0.5rem 1rem; text-align:center; color:var(--text-dim); font-weight:600;">Xavf</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+          <tr style="border-bottom:1px solid var(--border-subtle);
+            {% if row.risk == 'high' %}background:rgba(255,59,92,0.06);
+            {% elif row.risk == 'medium' %}background:rgba(255,178,59,0.05);
+            {% else %}background:rgba(0,255,136,0.03);{% endif %}">
+            <td style="padding:0.45rem 1rem; color:var(--text-secondary); white-space:nowrap;">{{ row.date }}</td>
+            <td style="padding:0.45rem 0.5rem; text-align:center; font-weight:600;
+              {% if row.risk == 'high' %}color:#FF3B5C;
+              {% elif row.risk == 'medium' %}color:#FFB23B;
+              {% else %}color:#00FF88;{% endif %}">
+              {{ row.glucose }}
+            </td>
+            <td style="padding:0.45rem 0.5rem; text-align:center; color:var(--text-secondary);">{{ row.bp }}</td>
+            <td style="padding:0.45rem 0.5rem; text-align:center;">
+              {% if row.taken %}
+                <span style="color:#00FF88; font-size:0.85rem;">✓</span>
+              {% else %}
+                <span style="color:#FF3B5C; font-size:0.85rem;">✗</span>
+              {% endif %}
+            </td>
+            <td style="padding:0.45rem 0.5rem; text-align:center; color:var(--text-dim); font-size:0.72rem;">
+              {{ row.symptom|default:"—" }}
+            </td>
+            <td style="padding:0.45rem 1rem; text-align:center;">
+              <span class="risk-badge level-{{ row.risk }}">
+                {% if row.risk == 'high' %}Yuqori{% elif row.risk == 'medium' %}O'rta{% else %}Yaxshi{% endif %}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <a href="{% url 'doctor_patient_detail' patient.id %}" class="btn-outline" style="display:flex; justify-content:center;">
+    ← Bemor profiliga qaytish
+  </a>
+
+</div>
+
+{{ labels|safe }}
+{{ glucose_data|safe }}
+{{ adherence_data|safe }}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const labels       = {{ labels|safe }};
+  const glucoseData  = {{ glucose_data|safe }};
+  const adherenceRaw = {{ adherence_data|safe }};
+
+  // Glucose line chart
+  const gCtx = document.getElementById('glucoseChart').getContext('2d');
+  new Chart(gCtx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Glyukoza',
+          data: glucoseData,
+          borderColor: '#00D4FF',
+          backgroundColor: 'rgba(0,212,255,0.07)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          pointHoverBackgroundColor: '#00D4FF',
+        },
+        {
+          label: 'Xavf chegarasi',
+          data: Array(labels.length).fill(11.1),
+          borderColor: 'rgba(255,59,92,0.65)',
+          borderWidth: 1.5,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          fill: false,
+        },
+        {
+          label: 'Xavfsiz zona',
+          data: Array(labels.length).fill(7.0),
+          borderColor: 'rgba(0,255,136,0.55)',
+          borderWidth: 1.5,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          fill: false,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 600 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(5,10,24,0.95)',
+          borderColor: 'rgba(0,212,255,0.3)',
+          borderWidth: 1,
+          titleColor: 'rgba(255,255,255,0.5)',
+          bodyColor: '#fff',
+          bodyFont: { weight: '700', size: 13 },
+          padding: 9,
+          displayColors: false,
+          filter: item => item.datasetIndex === 0,
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 9 }, maxTicksLimit: 7, maxRotation: 0 },
+          border: { color: 'rgba(255,255,255,0.06)' },
+        },
+        y: {
+          min: 4, max: 16,
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 9 }, maxTicksLimit: 5 },
+          border: { color: 'rgba(255,255,255,0.06)' },
+        }
+      }
+    }
+  });
+
+  // Adherence bar chart
+  const aCtx = document.getElementById('adherenceChart').getContext('2d');
+  new Chart(aCtx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: adherenceRaw,
+        backgroundColor: adherenceRaw.map(v => v ? 'rgba(0,255,136,0.65)' : 'rgba(255,59,92,0.65)'),
+        borderRadius: 3,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 600 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(5,10,24,0.95)',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          bodyColor: '#fff',
+          padding: 8,
+          displayColors: false,
+          callbacks: { label: ctx => ctx.raw ? 'Qabul qilindi' : 'O\'tkazib yuborildi' }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 8 }, maxTicksLimit: 7, maxRotation: 0 },
+          border: { color: 'rgba(255,255,255,0.06)' },
+        },
+        y: {
+          display: false, min: 0, max: 1,
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

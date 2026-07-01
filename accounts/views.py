@@ -173,6 +173,11 @@ def login_view(request):
         )
         if user is not None:
             login(request, user)
+            try:
+                if user.profile.is_doctor:
+                    return redirect('doctor_dashboard')
+            except Profile.DoesNotExist:
+                pass
             return redirect('dashboard')
         messages.error(request, 'Noto\'g\'ri foydalanuvchi nomi yoki parol.')
     return render(request, 'accounts/login.html')

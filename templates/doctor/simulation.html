@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block title %}Dori simulyatsiyasi — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">SIMULYATSIYA</p>
+    <h1 class="page-header__title">Dori simulyatsiyasi</h1>
+    <p class="page-header__sub">{{ patient.full_name|default:patient.user.get_full_name }}</p>
+  </div>
+
+  {% if not result %}
+  <!-- FORM -->
+  <form method="post" style="display:flex; flex-direction:column; gap:0.875rem;">
+    {% csrf_token %}
+
+    <!-- Dori nomi -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <label style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:0.5rem;">
+        DORI NOMI
+      </label>
+      <input type="text" name="medicine_name" required placeholder="Masalan: Metformin"
+        style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+               border-radius:8px; padding:0.6rem 0.875rem; color:var(--text-primary);
+               font-size:0.9rem; outline:none; box-sizing:border-box;">
+    </div>
+
+    <!-- Dori sinfi -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <label style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:0.5rem;">
+        DORI SINFI
+      </label>
+      <select name="medicine_class" required
+        style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+               border-radius:8px; padding:0.6rem 0.875rem; color:var(--text-primary);
+               font-size:0.9rem; outline:none; box-sizing:border-box; appearance:none;">
+        <option value="" disabled selected style="background:#050A18;">Tanlang</option>
+        <option value="metformin"        style="background:#050A18;">Metformin</option>
+        <option value="insulin"          style="background:#050A18;">Insulin</option>
+        <option value="sulfonilmochevina" style="background:#050A18;">Sulfonilmochevina</option>
+        <option value="boshqa"           style="background:#050A18;">Boshqa</option>
+      </select>
+    </div>
+
+    <!-- Doza + Birlik -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <label style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:0.5rem;">
+        DOZA
+      </label>
+      <div style="display:flex; gap:0.5rem;">
+        <input type="number" name="dose" required placeholder="500" min="1"
+          style="flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+                 border-radius:8px; padding:0.6rem 0.875rem; color:var(--text-primary);
+                 font-size:0.9rem; outline:none; box-sizing:border-box;">
+        <select name="dose_unit"
+          style="width:90px; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+                 border-radius:8px; padding:0.6rem 0.5rem; color:var(--text-primary);
+                 font-size:0.9rem; outline:none; appearance:none; text-align:center;">
+          <option value="mg"    style="background:#050A18;">mg</option>
+          <option value="ml"    style="background:#050A18;">ml</option>
+          <option value="birlik" style="background:#050A18;">birlik</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Kunlik qabul soni -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <label style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:0.5rem;">
+        KUNLIK QABUL SONI
+      </label>
+      <select name="daily_count"
+        style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+               border-radius:8px; padding:0.6rem 0.875rem; color:var(--text-primary);
+               font-size:0.9rem; outline:none; box-sizing:border-box; appearance:none;">
+        <option value="1" style="background:#050A18;">1×/kun</option>
+        <option value="2" style="background:#050A18;" selected>2×/kun</option>
+        <option value="3" style="background:#050A18;">3×/kun</option>
+        <option value="4" style="background:#050A18;">4×/kun</option>
+      </select>
+    </div>
+
+    <!-- Qabul vaqti -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <label style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:0.5rem;">
+        QABUL VAQTI
+      </label>
+      <select name="intake_time"
+        style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+               border-radius:8px; padding:0.6rem 0.875rem; color:var(--text-primary);
+               font-size:0.9rem; outline:none; box-sizing:border-box; appearance:none;">
+        <option value="ertalab"   style="background:#050A18;">Ertalab</option>
+        <option value="tushda"    style="background:#050A18;">Tushda</option>
+        <option value="kechqurun" style="background:#050A18;">Kechqurun</option>
+      </select>
+    </div>
+
+    <!-- Davomiyligi -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <label style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:0.5rem;">
+        DAVOMIYLIGI (KUN)
+      </label>
+      <input type="number" name="duration_days" required placeholder="30" min="1"
+        style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+               border-radius:8px; padding:0.6rem 0.875rem; color:var(--text-primary);
+               font-size:0.9rem; outline:none; box-sizing:border-box;">
+    </div>
+
+    <!-- Boshlanish sanasi -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <label style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:0.5rem;">
+        BOSHLANISH SANASI
+      </label>
+      <input type="date" name="start_date" required
+        style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+               border-radius:8px; padding:0.6rem 0.875rem; color:var(--text-primary);
+               font-size:0.9rem; outline:none; box-sizing:border-box; color-scheme:dark;">
+    </div>
+
+    <!-- Shifokor ko'rsatmasi -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <label style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:0.5rem;">
+        SHIFOKOR KO'RSATMASI
+      </label>
+      <textarea name="doctor_notes" rows="3" placeholder="Qo'shimcha ko'rsatmalar..."
+        style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+               border-radius:8px; padding:0.6rem 0.875rem; color:var(--text-primary);
+               font-size:0.875rem; outline:none; resize:vertical; box-sizing:border-box;
+               font-family:inherit; line-height:1.5;"></textarea>
+    </div>
+
+    <button type="submit" class="btn-primary" style="display:flex; justify-content:center;">
+      Simulyatsiyani boshlash
+    </button>
+    <a href="/doctor/patient/{{ patient.id }}/" class="btn-outline" style="display:flex; justify-content:center;">
+      ← Bemorga qaytish
+    </a>
+  </form>
+
+  {% else %}
+  <!-- RESULTS -->
+
+  <!-- A. Kutilayotgan ta'sir -->
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:0.875rem;">
+      KUTILAYOTGAN TA'SIR
+    </p>
+    <div style="display:flex; flex-direction:column; gap:0.6rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--border-subtle);">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Glyukoza</span>
+        <span style="font-size:0.8125rem; color:var(--text-secondary); text-align:right; max-width:55%;">7 kunda 15–20% pasayishi kutilmoqda</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--border-subtle);">
+        <span style="font-size:0.875rem; color:var(--text-primary);">HbA1c</span>
+        <span style="font-size:0.8125rem; color:var(--text-secondary); text-align:right; max-width:55%;">3 oyda yaxshilanishi mumkin</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0;">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Gipoglikemiya xavfi</span>
+        <span class="risk-badge {% if result.hypo_risk == 'yuqori' %}level-high{% elif result.hypo_risk == "o'rta" %}level-medium{% else %}level-note{% endif %}">
+          {{ result.hypo_risk }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- B. Xavfsizlik tekshiruvi -->
+  <div class="glass-card" style="margin-bottom:1rem;">
+    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.875rem;">
+      XAVFSIZLIK TEKSHIRUVI
+    </p>
+    <div style="display:flex; flex-direction:column; gap:0.6rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--border-subtle);">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Buyrak holati</span>
+        <span class="risk-badge level-note">Normal</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--border-subtle);">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Jigar holati</span>
+        <span class="risk-badge level-note">Normal</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0;">
+        <span style="font-size:0.875rem; color:var(--text-primary);">Allergiya xavfi</span>
+        <span class="risk-badge level-note">Past</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- C. Qaror -->
+  <div class="glass-card" style="margin-bottom:1rem;
+    {% if result.decision == 'green' %}border-color:rgba(0,255,136,0.3); background:rgba(0,255,136,0.05);
+    {% elif result.decision == 'yellow' %}border-color:rgba(255,178,59,0.3); background:rgba(255,178,59,0.05);
+    {% else %}border-color:rgba(255,59,92,0.3); background:rgba(255,59,92,0.05);{% endif %}">
+    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.75rem;
+      {% if result.decision == 'green' %}color:var(--safe);{% elif result.decision == 'yellow' %}color:var(--warning);{% else %}color:var(--danger);{% endif %}">
+      QAROR
+    </p>
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <div style="width:40px; height:40px; border-radius:50%; flex-shrink:0;
+        {% if result.decision == 'green' %}background:var(--safe); box-shadow:0 0 16px rgba(0,255,136,0.4);
+        {% elif result.decision == 'yellow' %}background:var(--warning); box-shadow:0 0 16px rgba(255,178,59,0.4);
+        {% else %}background:var(--danger); box-shadow:0 0 16px rgba(255,59,92,0.4);{% endif %}">
+      </div>
+      <p style="font-size:0.9375rem; font-weight:600;
+        {% if result.decision == 'green' %}color:var(--safe);{% elif result.decision == 'yellow' %}color:var(--warning);{% else %}color:var(--danger);{% endif %}">
+        {% if result.decision == 'green' %}
+          Qo'llash mumkin — standart nazorat bilan
+        {% elif result.decision == 'yellow' %}
+          Ehtiyotkorlik kerak
+        {% else %}
+          Xavf yuqori — muqobil variantni ko'ring
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div style="background:rgba(255,178,59,0.07); border:1px solid rgba(255,178,59,0.22);
+              border-radius:12px; padding:0.9rem 1.1rem; margin-bottom:1rem;">
+    <p style="font-size:0.7rem; font-weight:700; color:var(--warning); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.35rem;">
+      Muhim eslatma
+    </p>
+    <p style="font-size:0.8125rem; color:rgba(255,255,255,0.55); line-height:1.6;">
+      AIvitsenna klinik qarorni almashtirmaydi.
+      Bu baholash shifokorga xavflarni erta ko'rish uchun yordam beradi.
+    </p>
+  </div>
+
+  <!-- Action buttons -->
+  <div style="display:flex; flex-direction:column; gap:0.625rem;">
+    <a href="/doctor/patient/{{ patient.id }}/simulation/" class="btn-primary" style="display:flex; justify-content:center;">
+      Qayta ko'rish
+    </a>
+    <a href="/doctor/patient/{{ patient.id }}/" class="btn-outline" style="display:flex; justify-content:center;">
+      Tasdiqlash va yuborish
+    </a>
+  </div>
+
+  {% endif %}
+
+</div>
+{% endblock %}

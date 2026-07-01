@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
+    'diabetes',
 ]
 
 MIDDLEWARE = [
@@ -43,6 +44,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'diabetes.context_processors.unread_alerts_count',
             ],
         },
     },

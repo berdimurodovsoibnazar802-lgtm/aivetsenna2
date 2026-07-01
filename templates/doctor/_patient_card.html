@@ -1,0 +1,28 @@
+<div class="glass-card patient-card" data-risk="{{ risk_level }}" style="padding:1rem 1.25rem;">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.6rem;">
+    <div>
+      <p style="font-size:0.9375rem; font-weight:600; color:var(--text-primary); margin-bottom:0.15rem;">
+        {{ p.full_name|default:p.user.get_full_name }}
+      </p>
+      <p style="font-size:0.75rem; color:var(--text-dim);">
+        {{ p.get_diabetes_type_display|default:"Tur ko'rsatilmagan" }}
+        {% if p.age %} · {{ p.age }} yosh{% endif %}
+      </p>
+    </div>
+    <span class="risk-badge {{ badge_class }}">{{ risk_label }}</span>
+  </div>
+
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <p style="font-size:0.8125rem; color:var(--text-secondary);">
+      Glyukoza:
+      <span style="color:var(--text-primary); font-weight:600;">
+        {% if p.blood_glucose %}{{ p.blood_glucose }} mmol/L{% else %}—{% endif %}
+      </span>
+    </p>
+    <a href="{% url 'doctor_patient_detail' p.id %}"
+       style="font-size:0.8rem; font-weight:600; color:var(--cyan); text-decoration:none;
+              border:1px solid rgba(0,212,255,0.3); border-radius:8px; padding:0.3rem 0.75rem;">
+      Batafsil →
+    </a>
+  </div>
+</div>

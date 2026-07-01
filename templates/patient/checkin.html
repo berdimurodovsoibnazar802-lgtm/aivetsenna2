@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block title %}Kunlik nazorat — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">KUNLIK NAZORAT</p>
+    <h1 class="page-header__title">Bugungi holat</h1>
+    <p class="page-header__sub">Sog'liq ko'rsatkichlarini kiriting</p>
+  </div>
+
+  {% if saved %}
+  <!-- Success -->
+  <div style="background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.3); border-radius:12px; padding:1.5rem 1.25rem; text-align:center; margin-bottom:1rem;">
+    <p style="font-size:1.5rem; margin-bottom:0.5rem;">✓</p>
+    <p style="font-size:1rem; font-weight:600; color:var(--safe);">Bugungi ma'lumotlar saqlandi!</p>
+    <p style="font-size:0.8125rem; color:var(--text-dim); margin-top:0.35rem;">Sog'liq tarixi yangilandi</p>
+  </div>
+  <a href="{% url 'dashboard' %}" class="btn-primary" style="display:flex; justify-content:center;">
+    Bosh sahifaga qaytish
+  </a>
+
+  {% else %}
+  <form method="post" style="display:flex; flex-direction:column; gap:1rem;">
+    {% csrf_token %}
+
+    <!-- Section 1 — Tibbiy ko'rsatkichlar -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:0.875rem;">
+        TIBBIY KO'RSATKICHLAR
+      </p>
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Och qoringa qon shakar (mmol/L)</label>
+          <input type="number" name="glucose_fasting" step="0.1" min="0" placeholder="5.5"
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Ovqatdan keyin qon shakar (mmol/L)</label>
+          <input type="number" name="glucose_postmeal" step="0.1" min="0" placeholder="7.8"
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+        </div>
+
+        <div style="display:flex; gap:0.5rem;">
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Sistolik (mmHg)</label>
+            <input type="number" name="bp_systolic" min="0" placeholder="120"
+              style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Diastolik (mmHg)</label>
+            <input type="number" name="bp_diastolic" min="0" placeholder="80"
+              style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:0.5rem;">
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Pulse (urish/min)</label>
+            <input type="number" name="pulse" min="0" placeholder="72"
+              style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Vazn (kg)</label>
+            <input type="number" name="weight_kg" step="0.1" min="0" placeholder="70"
+              style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 2 — Dori qabul qilish -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:0.875rem;">
+        DORI QABUL QILISH
+      </p>
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Dori nomi</label>
+          <input type="text" name="medicine_name" placeholder="Masalan: Metformin"
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.5rem;">Qabul qilindimi?</label>
+          <div style="display:flex; gap:1rem;">
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="radio" name="medicine_taken" value="ha" onchange="toggleSkipReason(this)" style="accent-color:var(--cyan);">
+              <span style="font-size:0.875rem; color:var(--text-primary);">Ha</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="radio" name="medicine_taken" value="yoq" onchange="toggleSkipReason(this)" style="accent-color:var(--cyan);">
+              <span style="font-size:0.875rem; color:var(--text-primary);">Yo'q</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Qabul vaqti</label>
+          <input type="time" name="medicine_time"
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box; color-scheme:dark;">
+        </div>
+
+        <div id="skip-reason-block" style="display:none;">
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">O'tkazib yuborish sababi</label>
+          <textarea name="skip_reason" rows="2" placeholder="Sababni kiriting..."
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.875rem; outline:none; resize:vertical; box-sizing:border-box; font-family:inherit; line-height:1.5;"></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 3 — Turmush tarzi -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:0.875rem;">
+        TURMUSH TARZI
+      </p>
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Nonushta</label>
+          <input type="text" name="breakfast" placeholder="Masalan: Yormа, tuxum"
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Tushlik</label>
+          <input type="text" name="lunch" placeholder="Masalan: Sho'rva, non"
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Kechki ovqat</label>
+          <input type="text" name="dinner" placeholder="Masalan: Sabzavot salatasi"
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Jismoniy faollik</label>
+          <input type="text" name="physical_activity" placeholder="Masalan: Yurish, yugurish"
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+        </div>
+
+        <div style="display:flex; gap:0.5rem;">
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Faollik (daqiqa)</label>
+            <input type="number" name="activity_duration" min="0" placeholder="30"
+              style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Uyqu (soat)</label>
+            <input type="number" name="sleep_hours" step="0.5" min="0" max="24" placeholder="7"
+              style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-dim); display:block; margin-bottom:0.35rem;">Stress darajasi</label>
+          <select name="stress_level"
+            style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.55rem 0.875rem; color:var(--text-primary); font-size:0.9rem; outline:none; appearance:none; box-sizing:border-box;">
+            <option value="" style="background:#050A18;">Tanlang</option>
+            <option value="1" style="background:#050A18;">1 — Juda past</option>
+            <option value="2" style="background:#050A18;">2 — Past</option>
+            <option value="3" style="background:#050A18;">3 — O'rtacha</option>
+            <option value="4" style="background:#050A18;">4 — Yuqori</option>
+            <option value="5" style="background:#050A18;">5 — Juda yuqori</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 4 — Simptomlar -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:0.875rem;">
+        SIMPTOMLAR
+      </p>
+      <div style="display:flex; flex-direction:column; gap:0.6rem;">
+          {% for symptom in symptoms_list %}
+        <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer; padding:0.3rem 0;">
+          <input type="checkbox" name="symptoms" value="{{ symptom }}" style="accent-color:var(--cyan); width:16px; height:16px;">
+          <span style="font-size:0.875rem; color:var(--text-primary);">{{ symptom }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Section 5 — Umumiy holat -->
+    <div class="glass-card" style="padding:1rem 1.25rem;">
+      <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:0.875rem;">
+        BUGUN O'ZINGIZNI QANDAY HIS QILDINGIZ?
+      </p>
+      <textarea name="wellbeing_note" rows="3" placeholder="Fikrlaringizni erkin yozing..."
+        style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle); border-radius:8px; padding:0.6rem 0.875rem; color:var(--text-primary); font-size:0.875rem; outline:none; resize:vertical; box-sizing:border-box; font-family:inherit; line-height:1.5;"></textarea>
+    </div>
+
+    <button type="submit" class="btn-primary" style="display:flex; justify-content:center;">
+      Saqlash
+    </button>
+    <a href="{% url 'dashboard' %}" class="btn-outline" style="display:flex; justify-content:center;">
+      Bekor qilish
+    </a>
+
+  </form>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function toggleSkipReason(radio) {
+    document.getElementById('skip-reason-block').style.display =
+      radio.value === 'yoq' ? 'block' : 'none';
+  }
+</script>
+{% endblock %}

@@ -35,6 +35,9 @@ class Profile(models.Model):
     sleep_hours = models.FloatField(null=True, blank=True)
     takes_medication = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
+    is_doctor = models.BooleanField(default=False)
+    DIABETES_CHOICES = [('tip1', 'Tip 1'), ('tip2', 'Tip 2'), ('prediabet', 'Prediabet')]
+    diabetes_type = models.CharField(max_length=20, choices=DIABETES_CHOICES, blank=True)
     risk_score = models.PositiveSmallIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

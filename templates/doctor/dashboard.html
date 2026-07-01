@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Shifokor paneli — Alvitsenna{% endblock %}
+
+{% block content %}
+<div class="page-body">
+
+  <div class="page-header">
+    <p class="page-header__eyebrow">SHIFOKOR PANELI</p>
+    <h1 class="page-header__title">Bemorlar ro'yxati</h1>
+    <p class="page-header__sub">{{ request.user.get_full_name }}</p>
+  </div>
+
+  <!-- Filter buttons -->
+  <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+    <button onclick="filterCards('all')" id="btn-all"
+      style="padding:0.45rem 1rem; border-radius:20px; border:1px solid var(--cyan); background:rgba(0,212,255,0.12); color:var(--cyan); font-size:0.8rem; font-weight:600; cursor:pointer;">
+      Barchasi
+    </button>
+    <button onclick="filterCards('high')" id="btn-high"
+      style="padding:0.45rem 1rem; border-radius:20px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:var(--text-secondary); font-size:0.8rem; font-weight:600; cursor:pointer;">
+      Yuqori xavf
+    </button>
+    <button onclick="filterCards('ok')" id="btn-ok"
+      style="padding:0.45rem 1rem; border-radius:20px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:var(--text-secondary); font-size:0.8rem; font-weight:600; cursor:pointer;">
+      Barqaror
+    </button>
+  </div>
+
+  <!-- Patient cards -->
+  <div style="display:flex; flex-direction:column; gap:0.75rem;" id="patient-list">
+    {% for p in patients %}
+      {% if p.blood_glucose %}
+        {% if p.blood_glucose > 11 %}
+          {% with risk_level="high" risk_label="Yuqori xavf" badge_class="level-high" %}
+            {% include 'doctor/_patient_card.html' %}
+          {% endwith %}
+        {% elif p.blood_glucose >= 7 %}
+          {% with risk_level="medium" risk_label="O'rta xavf" badge_class="level-medium" %}
+            {% include 'doctor/_patient_card.html' %}
+          {% endwith %}
+        {% else %}
+          {% with risk_level="ok" risk_label="Barqaror" badge_class="level-note" %}
+            {% include 'doctor/_patient_card.html' %}
+          {% endwith %}
+        {% endif %}
+      {% else %}
+        {% with risk_level="ok" risk_label="Ma'lumot yo'q" badge_class="level-note" %}
+          {% include 'doctor/_patient_card.html' %}
+        {% endwith %}
+      {% endif %}
+    {% empty %}
+      <p style="color:var(--text-dim); font-size:0.875rem; text-align:center; padding:2rem 0;">Bemorlar topilmadi</p>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function filterCards(type) {
+    const btns = {
+      all:  document.getElementById('btn-all'),
+      high: document.getElementById('btn-high'),
+      ok:   document.getElementById('btn-ok'),
+    };
+    Object.values(btns).forEach(b => {
+      b.style.borderColor = 'rgba(255,255,255,0.12)';
+      b.style.background  = 'rgba(255,255,255,0.04)';
+      b.style.color       = 'rgba(255,255,255,0.65)';
+    });
+    btns[type].style.borderColor = '#00D4FF';
+    btns[type].style.background  = 'rgba(0,212,255,0.12)';
+    btns[type].style.color       = '#00D4FF';
+
+    document.querySelectorAll('.patient-card').forEach(card => {
+      const level = card.dataset.risk;
+      if (type === 'all') {
+        card.style.display = '';
+      } else if (type === 'high') {
+        card.style.display = level === 'high' ? '' : 'none';
+      } else {
+        card.style.display = (level === 'ok' || level === 'medium') ? '' : 'none';
+      }
+    });
+  }
+</script>
+{% endblock %}
