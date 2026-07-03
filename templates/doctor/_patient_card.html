@@ -9,7 +9,22 @@
         {% if p.age %} · {{ p.age }} yosh{% endif %}
       </p>
     </div>
-    <span class="risk-badge {{ badge_class }}">{{ risk_label }}</span>
+    <!-- AI risk badge -->
+    {% if p.ai_risk_percent is not None %}
+      <div style="text-align:right;">
+        <div style="
+          font-size:1.25rem; font-weight:800; line-height:1;
+          {% if p.ai_risk_percent >= 60 %}color:#FF3B5C;
+          {% elif p.ai_risk_percent >= 35 %}color:var(--warning);
+          {% else %}color:var(--safe);{% endif %}
+        ">{{ p.ai_risk_percent }}%</div>
+        {% if p.ai_risk_percent >= 60 %}
+          <div style="display:inline-flex; align-items:center; background:rgba(255,59,92,0.1); border:1px solid rgba(255,59,92,0.5); border-radius:6px; padding:3px 10px; font-size:10px; color:#FF3B5C; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-top:3px;">AI XAVF</div>
+        {% endif %}
+      </div>
+    {% else %}
+      <span class="risk-badge" style="color:var(--text-dim); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);">Ma'lumot yo'q</span>
+    {% endif %}
   </div>
 
   <div style="display:flex; justify-content:space-between; align-items:center;">

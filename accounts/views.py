@@ -225,9 +225,13 @@ def onboarding_view(request):
 
 @login_required
 def dashboard_view(request):
+    from .ml_service import predict_diabetes_risk
+
     profile, _ = Profile.objects.get_or_create(user=request.user)
     profile.calculate_risk_score()
     profile.save()
+
+    ml_result = predict_diabetes_risk(profile)
 
     current = profile.risk_score
     target = max(current - 25, 15)
@@ -245,19 +249,29 @@ def dashboard_view(request):
         'forecast_labels': forecast_labels,
         'forecast_values': forecast_values,
         'target': target,
+        'ai_risk_percent': ml_result['risk_percent'] if ml_result else None,
+        'ai_available': ml_result is not None,
     }
     return render(request, 'accounts/dashboard.html', context)
 
 
 @login_required
 def twin_view(request):
+    from .ml_service import predict_diabetes_risk
     profile, _ = Profile.objects.get_or_create(user=request.user)
-    return render(request, 'accounts/twin.html', {'profile': profile})
+    ml_result = predict_diabetes_risk(profile)
+    return render(request, 'accounts/twin.html', {
+        'profile': profile,
+        'ai_risk_percent': ml_result['risk_percent'] if ml_result else None,
+        'ai_available': ml_result is not None,
+    })
 
 
 @login_required
 def analysis_view(request):
+    from .ml_service import predict_diabetes_risk
     profile, _ = Profile.objects.get_or_create(user=request.user)
+    ml_result = predict_diabetes_risk(profile)
 
     risk_factors = []
 
@@ -276,6 +290,8 @@ def analysis_view(request):
     context = {
         'profile': profile,
         'risk_factors': risk_factors,
+        'ai_risk_percent': ml_result['risk_percent'] if ml_result else None,
+        'ai_available': ml_result is not None,
     }
     return render(request, 'accounts/analysis.html', context)
 

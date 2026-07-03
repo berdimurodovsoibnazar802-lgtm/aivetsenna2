@@ -10,55 +10,131 @@
     <p class="page-header__eyebrow">RAQAMLI EGIZAK</p>
     <h1 class="page-header__title">Digital Twin</h1>
     <p class="page-header__sub">Sog'liq xavf zonalari vizualizatsiyasi</p>
+    <div style="margin-top:0.75rem;">
+      <span class="ai-badge">AI · Digital Twin</span>
+    </div>
   </div>
 
-  <div class="glass-card" style="padding:1.75rem 1rem 1.5rem; margin-bottom:1rem; display:flex; flex-direction:column; align-items:center;">
+  <div class="glass-card" style="padding:1rem; margin-bottom:1rem;">
+    <div style="display:flex; gap:0.75rem; align-items:flex-start;">
 
-    <!-- Hologram image with pulse-dot overlay and scan-line -->
-    <div class="scan-wrapper" style="
-      position: relative;
-      width: 100%;
-      max-width: 340px;
-      border-radius: 12px;
-      overflow: hidden;
-    ">
+      <!-- LEFT: hologram avatar (55%) -->
+      <div style="width:55%; flex-shrink:0;">
 
-      {% if profile.gender == 'female' %}
-        <img src="{% static 'img/avatars/female_hologram.jpg' %}"
-             alt="Digital Twin hologram"
-             style="width:100%; max-width:340px; display:block; margin:0 auto; border-radius:12px;">
-      {% else %}
-        <img src="{% static 'img/avatars/male_hologram.jpg' %}"
-             alt="Digital Twin hologram"
-             style="width:100%; max-width:340px; display:block; margin:0 auto; border-radius:12px;">
-      {% endif %}
+        <!-- Hologram image with pulse-dot overlay and scan-line -->
+        <div class="scan-wrapper" style="position:relative; border-radius:12px; overflow:hidden;">
 
-      <!-- Scan-line sweeping over the image -->
-      <div class="scan-line"></div>
+          {% if profile.gender == 'female' %}
+            <img src="{% static 'img/avatars/female_hologram.jpg' %}"
+                 alt="Digital Twin hologram"
+                 style="width:100%; display:block; border-radius:12px;">
+          {% else %}
+            <img src="{% static 'img/avatars/male_hologram.jpg' %}"
+                 alt="Digital Twin hologram"
+                 style="width:100%; display:block; border-radius:12px;">
+          {% endif %}
 
-      <!-- Organ glow marker — both images share same composition (960x1280), glow at ~top:31% left:45% -->
-      {% if profile.bp_systolic and profile.bp_systolic >= 130 or profile.blood_glucose and profile.blood_glucose >= 7.0 %}
-        <div class="pulse-dot" style="position:absolute; top:31%; left:45%; transform:translate(-50%,-50%);"></div>
-      {% else %}
-        <div style="position:absolute; top:31%; left:45%; transform:translate(-50%,-50%); width:24px; height:24px; border-radius:50%; background:#FF3B5C; opacity:0.3;"></div>
-      {% endif %}
+          <!-- Scan-line sweeping over the image -->
+          <div class="scan-line"></div>
 
-    </div>
+          <!-- Organ glow marker — driven by AI diabetes risk -->
+          {% if ai_available %}
+            {% if ai_risk_percent >= 70 %}
+              <div class="pulse-dot" style="position:absolute; top:31%; left:45%; transform:translate(-50%,-50%);"></div>
+            {% elif ai_risk_percent >= 40 %}
+              <div style="position:absolute; top:31%; left:45%; transform:translate(-50%,-50%);
+                          width:24px; height:24px; border-radius:50%;
+                          background:var(--warning); box-shadow:0 0 10px rgba(255,178,59,0.5);
+                          animation:pulse 2.8s ease-in-out infinite;"></div>
+            {% else %}
+              <div style="position:absolute; top:31%; left:45%; transform:translate(-50%,-50%);
+                          width:24px; height:24px; border-radius:50%;
+                          background:var(--safe); opacity:0.45;"></div>
+            {% endif %}
+          {% else %}
+            <div style="position:absolute; top:31%; left:45%; transform:translate(-50%,-50%);
+                        width:24px; height:24px; border-radius:50%;
+                        background:var(--text-dim); opacity:0.2;"></div>
+          {% endif %}
 
-    <!-- Risk score below the image -->
-    <div style="margin-top:1.5rem; text-align:center;">
-      <div class="risk-score {% if profile.risk_score >= 70 %}high{% elif profile.risk_score >= 40 %}medium{% endif %}"
-           style="font-size:3rem;">
-        {{ profile.risk_score }}
+        </div>
+
+        <!-- Patient name + badge below avatar -->
+        <p style="font-size:0.875rem; font-weight:700; color:var(--text-primary); margin-top:0.625rem; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          {{ profile.full_name|default:request.user.username }}
+        </p>
+        <div style="text-align:center; margin-top:0.3rem;">
+          <span class="ai-badge">AI · Digital Twin</span>
+        </div>
+
       </div>
-      <p class="risk-score__label" style="margin-top:0.35rem;">
-        {% if profile.risk_score >= 70 %}Kritik xavf zonasi
-        {% elif profile.risk_score >= 40 %}Kuzatuv zonasi
-        {% else %}Barqaror holat
-        {% endif %}
-      </p>
-    </div>
 
+      <!-- RIGHT: metrics panel (45%) -->
+      <div style="flex:1; background:rgba(0,212,255,0.04); border:1px solid rgba(0,212,255,0.2); border-radius:16px; padding:14px; display:flex; flex-direction:column;">
+
+        <!-- 1. GLYUKOZA -->
+        <div style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06);">
+          <p style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:2px;">GLYUKOZA</p>
+          <p style="font-size:22px; font-weight:700; line-height:1.1;
+            {% if profile.blood_glucose %}{% if profile.blood_glucose > 11 %}color:#FF3B5C;{% elif profile.blood_glucose >= 7 %}color:var(--warning);{% else %}color:var(--safe);{% endif %}{% else %}color:var(--text-dim);{% endif %}">
+            {{ profile.blood_glucose|default:"--" }}<span style="font-size:11px; font-weight:400; color:var(--text-dim);"> {% if profile.blood_glucose %}mmol/L{% endif %}</span>
+          </p>
+        </div>
+
+        <!-- 2. QON BOSIMI -->
+        <div style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06);">
+          <p style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:2px;">QON BOSIMI</p>
+          <p style="font-size:22px; font-weight:700; line-height:1.1;
+            {% if profile.bp_systolic %}{% if profile.bp_systolic > 140 %}color:#FF3B5C;{% else %}color:var(--safe);{% endif %}{% else %}color:var(--text-dim);{% endif %}">
+            {% if profile.bp_systolic and profile.bp_diastolic %}{{ profile.bp_systolic }}/{{ profile.bp_diastolic }}<span style="font-size:11px; font-weight:400; color:var(--text-dim);"> mmHg</span>{% else %}--{% endif %}
+          </p>
+        </div>
+
+        <!-- 3. AI XAVF -->
+        <div style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06);">
+          <p style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:2px; display:flex; align-items:center; gap:4px;">
+            AI XAVF <span style="display:inline-flex; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.4); border-radius:4px; padding:1px 5px; font-size:8px; color:#00D4FF; letter-spacing:0.05em;">AI</span>
+          </p>
+          <p style="font-size:22px; font-weight:700; line-height:1.1;
+            {% if profile.risk_score %}{% if profile.risk_score > 60 %}color:#FF3B5C;{% elif profile.risk_score >= 35 %}color:var(--warning);{% else %}color:var(--safe);{% endif %}{% else %}color:var(--text-dim);{% endif %}">
+            {{ profile.risk_score|default:"--" }}<span style="font-size:11px; font-weight:400; color:var(--text-dim);">{% if profile.risk_score %}%{% endif %}</span>
+          </p>
+        </div>
+
+        <!-- 4. BMI -->
+        <div style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06);">
+          <p style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:2px;">BMI</p>
+          <p style="font-size:22px; font-weight:700; line-height:1.1;
+            {% if profile.bmi %}{% if profile.bmi > 30 %}color:#FF3B5C;{% elif profile.bmi >= 25 %}color:var(--warning);{% else %}color:var(--safe);{% endif %}{% else %}color:var(--text-dim);{% endif %}">
+            {{ profile.bmi|default:"--" }}
+          </p>
+        </div>
+
+        <!-- 5. UYQU -->
+        <div style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06);">
+          <p style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:2px;">UYQU</p>
+          <p style="font-size:22px; font-weight:700; line-height:1.1;
+            {% if profile.sleep_hours %}{% if profile.sleep_hours >= 7 %}color:var(--safe);{% elif profile.sleep_hours >= 6 %}color:var(--warning);{% else %}color:#FF3B5C;{% endif %}{% else %}color:var(--text-dim);{% endif %}">
+            {{ profile.sleep_hours|default:"--" }}<span style="font-size:11px; font-weight:400; color:var(--text-dim);"> {% if profile.sleep_hours %}soat{% endif %}</span>
+          </p>
+        </div>
+
+        <!-- 6. KUNLIK QADAM -->
+        <div style="margin-bottom:10px;">
+          <p style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:2px;">KUNLIK QADAM</p>
+          <p style="font-size:22px; font-weight:700; line-height:1.1;
+            {% if profile.daily_steps %}{% if profile.daily_steps >= 8000 %}color:var(--safe);{% elif profile.daily_steps >= 5000 %}color:var(--warning);{% else %}color:#FF3B5C;{% endif %}{% else %}color:var(--text-dim);{% endif %}">
+            {{ profile.daily_steps|default:"--" }}
+          </p>
+        </div>
+
+        <!-- Disclaimer -->
+        <p style="font-size:10px; color:rgba(255,255,255,0.4); margin-top:auto; line-height:1.5;">
+          Bu natijalar shifokor tashxisini almashtirmaydi
+        </p>
+
+      </div>
+    </div>
   </div>
 
   <!-- Marker legend -->

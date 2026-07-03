@@ -5,6 +5,7 @@ from datetime import date, timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from accounts.models import Profile
+from accounts.ml_service import predict_diabetes_risk
 from diabetes.models import DailyCheckIn, Alert
 
 
@@ -66,7 +67,11 @@ def _doctor_required(request):
 def doctor_dashboard(request):
     if not _doctor_required(request):
         return redirect('login')
-    patients = Profile.objects.filter(is_doctor=False).select_related('user')
+    patients = list(Profile.objects.filter(is_doctor=False).select_related('user'))
+    for p in patients:
+        ml = predict_diabetes_risk(p)
+        p.ai_risk_percent = ml['risk_percent'] if ml else None
+    patients.sort(key=lambda p: p.ai_risk_percent if p.ai_risk_percent is not None else -1, reverse=True)
     return render(request, 'doctor/dashboard.html', {'patients': patients})
 
 
@@ -74,6 +79,7 @@ def doctor_patient_detail(request, patient_id):
     if not _doctor_required(request):
         return redirect('login')
     patient = get_object_or_404(Profile, id=patient_id, is_doctor=False)
+    ml = predict_diabetes_risk(patient)
     medicines = [
         {'name': 'Metformin', 'dosage': '500mg', 'status': 'Faol'},
         {'name': 'Aspirin',   'dosage': '100mg', 'status': 'Faol'},
@@ -81,6 +87,8 @@ def doctor_patient_detail(request, patient_id):
     return render(request, 'doctor/patient_detail.html', {
         'patient': patient,
         'medicines': medicines,
+        'ai_risk_percent': ml['risk_percent'] if ml else None,
+        'ai_available': ml is not None,
     })
 
 

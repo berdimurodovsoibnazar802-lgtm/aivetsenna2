@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Dori simulyatsiyasi — Alvitsenna{% endblock %}
+
+{% block extra_head %}
+<style>
+@keyframes sim-scan {
+  0%   { top: 0; opacity: 1; }
+  90%  { top: calc(100% - 3px); opacity: 1; }
+  100% { top: calc(100% - 3px); opacity: 0; }
+}
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="page-body">
@@ -9,6 +20,83 @@
     <p class="page-header__eyebrow">SIMULYATSIYA</p>
     <h1 class="page-header__title">Dori simulyatsiyasi</h1>
     <p class="page-header__sub">{{ patient.full_name|default:patient.user.get_full_name }}</p>
+  </div>
+
+  <div style="background:rgba(0,212,255,0.06); border-left:3px solid #00D4FF; border-radius:8px; padding:10px 14px; margin-bottom:16px;">
+    <div style="color:#00D4FF; font-size:11px; font-weight:700; letter-spacing:1px;">
+      AI SIMULYATSIYA · RandomForest ML
+    </div>
+    <div style="color:rgba(255,255,255,0.4); font-size:10px; margin-top:2px;">
+      scikit-learn 1.9.0 · Kaggle Diabetes Dataset
+    </div>
+  </div>
+
+  <!-- Patient avatar header -->
+  <div class="glass-card ai-glow-card" style="margin-bottom:1.25rem; padding:1rem 1.25rem;">
+    <div style="display:flex; gap:1rem; align-items:flex-start;">
+
+      <!-- Avatar with scan line -->
+      <div style="position:relative; flex-shrink:0; overflow:hidden; border-radius:12px; width:120px; height:160px;">
+        {% if patient.gender == 'male' %}
+          <img src="{% static 'img/avatars/male_hologram.jpg' %}" alt="Bemor avatari"
+               style="width:120px; height:160px; object-fit:cover; object-position:top; border-radius:12px; border:1px solid rgba(0,212,255,0.3); box-shadow:0 0 24px rgba(0,212,255,0.15); display:block;">
+        {% else %}
+          <img src="{% static 'img/avatars/female_hologram.jpg' %}" alt="Bemor avatari"
+               style="width:120px; height:160px; object-fit:cover; object-position:top; border-radius:12px; border:1px solid rgba(0,212,255,0.3); box-shadow:0 0 24px rgba(0,212,255,0.15); display:block;">
+        {% endif %}
+        <!-- Scan line -->
+        <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:linear-gradient(90deg, transparent, rgba(0,212,255,0.8), transparent); animation:sim-scan 3s linear infinite;"></div>
+      </div>
+
+      <!-- Patient info -->
+      <div style="flex:1; min-width:0;">
+        <p style="font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          {{ patient.full_name|default:patient.user.get_full_name }}
+        </p>
+        <p style="font-size:0.72rem; color:var(--text-dim); margin-bottom:0.75rem;">
+          {{ patient.get_diabetes_type_display|default:"Tur ko'rsatilmagan" }}{% if patient.age %} · {{ patient.age }} yosh{% endif %}
+        </p>
+
+        <!-- Glyukoza -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.3rem 0; border-bottom:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:0.75rem; color:var(--text-dim);">Glyukoza</span>
+          <span style="font-size:0.8125rem; font-weight:700;
+            {% if patient.blood_glucose %}
+              {% if patient.blood_glucose > 11 %}color:#FF3B5C;{% elif patient.blood_glucose >= 7 %}color:var(--warning);{% else %}color:var(--safe);{% endif %}
+            {% else %}color:var(--text-dim);{% endif %}">
+            {% if patient.blood_glucose %}{{ patient.blood_glucose }} mmol/L{% else %}—{% endif %}
+          </span>
+        </div>
+
+        <!-- Qon bosimi -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.3rem 0; border-bottom:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:0.75rem; color:var(--text-dim);">Qon bosimi</span>
+          <span style="font-size:0.8125rem; font-weight:700;
+            {% if patient.bp_systolic and patient.bp_systolic > 140 %}color:#FF3B5C;{% else %}color:var(--safe);{% endif %}">
+            {% if patient.bp_systolic and patient.bp_diastolic %}{{ patient.bp_systolic }}/{{ patient.bp_diastolic }} mmHg{% else %}—{% endif %}
+          </span>
+        </div>
+
+        <!-- AI xavf -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.3rem 0;">
+          <span style="font-size:0.75rem; color:var(--text-dim);">AI xavf bahosi</span>
+          {% if patient.ai_risk_percent is not None %}
+            <span class="ai-badge" style="
+              {% if patient.ai_risk_percent >= 60 %}color:#FF3B5C; border-color:rgba(255,59,92,0.5); background:rgba(255,59,92,0.1);
+              {% elif patient.ai_risk_percent >= 35 %}color:var(--warning); border-color:rgba(255,178,59,0.5); background:rgba(255,178,59,0.08);
+              {% else %}color:var(--safe); border-color:rgba(0,255,136,0.5); background:rgba(0,255,136,0.08);{% endif %}">
+              {{ patient.ai_risk_percent }}%
+            </span>
+          {% else %}
+            <span style="font-size:0.8125rem; color:var(--text-dim);">—</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:11px; color:rgba(255,255,255,0.4); margin-top:0.75rem;">
+      Simulyatsiya ushbu bemor profili asosida amalga oshiriladi
+    </p>
   </div>
 
   {% if not result %}

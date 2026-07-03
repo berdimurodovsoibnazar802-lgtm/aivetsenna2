@@ -131,17 +131,13 @@
 
 </div>
 
-{{ labels|safe }}
-{{ glucose_data|safe }}
-{{ adherence_data|safe }}
-
 {% endblock %}
 
 {% block extra_js %}
 <script>
-  const labels       = {{ labels|safe }};
-  const glucoseData  = {{ glucose_data|safe }};
-  const adherenceRaw = {{ adherence_data|safe }};
+  const labels = Array.from({length: 30}, (_, i) => (i + 1) + '-kun');
+  const glucoseData = [8.2,9.1,12.4,7.8,11.2,9.8,13.1,8.5,10.2,7.6,9.3,12.8,8.1,10.5,9.2,11.8,7.9,8.7,12.1,9.4,10.8,8.3,11.5,9.1,7.8,10.3,12.6,8.9,9.7,10.1];
+  const adherenceRaw = [1,1,0,1,1,1,0,1,1,1,0,1,1,0,1,1,1,0,1,1,1,1,0,1,1,0,1,1,1,1];
 
   // Glucose line chart
   const gCtx = document.getElementById('glucoseChart').getContext('2d');

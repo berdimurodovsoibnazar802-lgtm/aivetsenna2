@@ -11,6 +11,22 @@
     <p class="page-header__sub">{{ patient.get_diabetes_type_display|default:"Diabet turi ko'rsatilmagan" }}</p>
   </div>
 
+  <!-- AI diabet xavfi -->
+  <div class="glass-card" style="text-align:center; padding:1.25rem; margin-bottom:1rem; border:1px solid rgba(0,212,255,0.2);">
+    <p style="font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.5rem;">AI DIABET XAVFI</p>
+    {% if ai_available %}
+      <div style="
+        font-size:3rem; font-weight:800; line-height:1; letter-spacing:-0.03em; font-variant-numeric:tabular-nums;
+        {% if ai_risk_percent >= 70 %}color:var(--danger); text-shadow:0 0 20px var(--danger-glow);
+        {% elif ai_risk_percent >= 40 %}color:var(--warning); text-shadow:0 0 16px rgba(255,178,59,0.4);
+        {% else %}color:var(--safe); text-shadow:0 0 16px rgba(0,255,136,0.35);{% endif %}
+      ">{{ ai_risk_percent }}%</div>
+      <p style="font-size:0.7rem; color:var(--text-dim); margin-top:0.5rem;">RandomForest modeli tomonidan</p>
+    {% else %}
+      <p style="font-size:0.875rem; color:var(--text-secondary);">Bemor ma'lumotlarini kiritmagan</p>
+    {% endif %}
+  </div>
+
   <!-- Vital stats -->
   <div class="stat-grid" style="margin-bottom:1rem;">
     <div class="stat-cell">

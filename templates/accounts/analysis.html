@@ -12,6 +12,36 @@
     <p class="page-header__sub">Sizning ko'rsatkichlaringiz asosida</p>
   </div>
 
+  <!-- AI Xulosasi Card -->
+  <div class="glass-card" style="border:1px solid rgba(0,212,255,0.2); margin-bottom:1rem; text-align:center; padding:1.5rem 1.25rem;">
+    <p style="font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.75rem;">AI XULOSASI — DIABET XAVFI</p>
+
+    {% if ai_available %}
+      <div style="
+        font-size:3.5rem; font-weight:800; line-height:1; letter-spacing:-0.03em;
+        font-variant-numeric:tabular-nums; margin-bottom:0.5rem;
+        {% if ai_risk_percent >= 70 %}color:var(--danger); text-shadow:0 0 20px var(--danger-glow);
+        {% elif ai_risk_percent >= 40 %}color:var(--warning); text-shadow:0 0 16px rgba(255,178,59,0.4);
+        {% else %}color:var(--safe); text-shadow:0 0 16px rgba(0,255,136,0.35);{% endif %}
+      ">{{ ai_risk_percent }}%</div>
+
+      <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.5rem;">
+        {% if ai_risk_percent >= 70 %}
+          Diabet xavfi yuqori. Shifokorga murojaat qilish tavsiya etiladi.
+        {% elif ai_risk_percent >= 40 %}
+          O'rtacha xavf. Turmush tarzini yaxshilash muhim.
+        {% else %}
+          Xavf past. Sog'lom holatni saqlang.
+        {% endif %}
+      </p>
+      <p style="font-size:0.7rem; color:var(--text-dim);">RandomForest modeli tomonidan</p>
+
+    {% else %}
+      <p style="font-size:0.875rem; color:var(--text-secondary); margin-bottom:0.75rem;">AI tahlil uchun sog'liq ko'rsatkichlari kiritilmagan.</p>
+      <a href="{% url 'onboarding' %}" style="font-size:0.8rem; color:var(--cyan); text-decoration:none;">Ma'lumot kiritish →</a>
+    {% endif %}
+  </div>
+
   <!-- Risk Factor Cards -->
   {% if risk_factors %}
     {% for factor in risk_factors %}
@@ -38,6 +68,7 @@
         <path d="M12 8v4M12 16h.01"/>
       </svg>
       <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan);">AI TAVSIYA</p>
+      <span class="ai-badge">AI · ML</span>
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 0.75rem;">

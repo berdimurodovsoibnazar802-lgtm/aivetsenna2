@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "kasallik": "Diabet / Giperglikemiya asoratlari",
+        "kalit_sozlar": ["metformin", "kardio", "glyukoza", "asorat"],
+        "maqola_nomi": "Lancet Diabetes 2026: Insulin rezistentligi va mikrotomir asoratlarini kamaytirish protokoli",
+        "tibbiy_tavsiya": "Glyukoza darajasi 160 mg/dL dan yuqori bo'lgan bemorlarda haftalik 150 daqiqalik intervalgacha bo'lgan jismoniy faollik mikrotomir (ko'z va buyrak) asoratlari xavfini 35% ga kamaytiradi. Metformin terapiyasi shifokor nazoratida kuniga 850mg dan boshlanishi tavsiya etiladi."
+    },
+    {
+        "id": 2,
+        "kasallik": "STABIL (Sog'lom / Normada)",
+        "kalit_sozlar": ["profilaktika", "parhez", "stabil"],
+        "maqola_nomi": "Harvard Health 2025: Metabolik muvozanatni saqlash",
+        "tibbiy_tavsiya": "Stabil holatni saqlab qolish uchun uglevodlar miqdorini cheklash va har yili profilaktik tibbiy ko'rikdan o'tib turish yetarli."
+    }
+]

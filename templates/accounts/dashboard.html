@@ -16,21 +16,54 @@
     <p class="page-header__sub">Bugungi sog'liq holati</p>
   </div>
 
-  <!-- Risk Score -->
-  <div class="glass-card" style="text-align: center; padding: 2rem 1.25rem; margin-bottom: 1rem;">
-    <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.5rem;">XAVF DARAJASI</p>
-    <div class="risk-score {% if profile.risk_score >= 70 %}high{% elif profile.risk_score >= 40 %}medium{% endif %}">
-      {{ profile.risk_score }}
+  <!-- AI Diabetes Risk Card -->
+  <div class="glass-card ai-glow-card" style="text-align: center; padding: 2rem 1.25rem; margin-bottom: 1rem;">
+    <p style="font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.5rem;">DIABET XAVFI — AI TAHLILI</p>
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; justify-content:center;">
+      <span class="ai-dot"></span>
+      <span class="ai-badge">AI · RandomForest</span>
     </div>
-    <p class="risk-score__label">
-      {% if profile.risk_score >= 70 %}
-        Yuqori xavf — shifokorga murojaat qiling
-      {% elif profile.risk_score >= 40 %}
-        O'rtacha xavf — e'tibor talab etadi
-      {% else %}
-        Past xavf — yaxshi holat
-      {% endif %}
-    </p>
+
+    {% if ai_available %}
+      <div style="
+        font-size: 4.5rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+        {% if ai_risk_percent >= 70 %}
+          color: var(--danger); text-shadow: 0 0 24px var(--danger-glow);
+        {% elif ai_risk_percent >= 40 %}
+          color: var(--warning); text-shadow: 0 0 20px rgba(255,178,59,0.4);
+        {% else %}
+          color: var(--safe); text-shadow: 0 0 24px rgba(0,255,136,0.35);
+        {% endif %}
+      ">{{ ai_risk_percent }}%</div>
+
+      <p class="risk-score__label" style="margin-top: 0.4rem;">
+        {% if ai_risk_percent >= 70 %}
+          Yuqori xavf — shifokorga murojaat qiling
+        {% elif ai_risk_percent >= 40 %}
+          O'rtacha xavf — e'tibor talab etadi
+        {% else %}
+          Past xavf — yaxshi holat
+        {% endif %}
+      </p>
+      <p style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.75rem;">
+        Sun'iy intellekt modeli (RandomForest) tomonidan hisoblandi
+      </p>
+
+    {% else %}
+      <div style="padding: 1rem 0;">
+        <svg style="width:48px; height:48px; color:var(--text-dim); margin-bottom:1rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p style="font-size: 0.9375rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem;">Ma'lumotlar kiritilmagan</p>
+        <p style="font-size: 0.8125rem; color: var(--text-dim); margin-bottom: 1.25rem;">AI tahlil qilishi uchun sog'liq ko'rsatkichlaringizni kiriting</p>
+        <a href="{% url 'onboarding' %}" class="btn-outline btn-sm" style="display:inline-flex;">
+          Sog'liq ma'lumotlarini kiriting
+        </a>
+      </div>
+    {% endif %}
   </div>
 
   <!-- Faol dorilar card -->
@@ -159,6 +192,22 @@
       <path d="M5 12h14M12 5l7 7-7 7"/>
     </svg>
   </a>
+
+  <!-- Additional quick links -->
+  <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem; margin-bottom:1rem;">
+    <a href="{% url 'health_organs' %}" class="stat-cell" style="text-decoration:none; display:flex; justify-content:space-between; align-items:center;">
+      <span class="stat-cell__label">Organlar holati</span>
+      <span style="color:var(--cyan); font-size:0.875rem;">→</span>
+    </a>
+    <a href="{% url 'health_simulation' %}" class="stat-cell" style="text-decoration:none; display:flex; justify-content:space-between; align-items:center;">
+      <span class="stat-cell__label">Simulyatsiya</span>
+      <span style="color:var(--cyan); font-size:0.875rem;">→</span>
+    </a>
+    <a href="{% url 'alerts_view' %}" class="stat-cell" style="text-decoration:none; display:flex; justify-content:space-between; align-items:center;">
+      <span class="stat-cell__label">Ogohlantirishlar</span>
+      <span style="color:var(--cyan); font-size:0.875rem;">→</span>
+    </a>
+  </div>
 
 </div>
 

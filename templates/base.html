@@ -28,7 +28,94 @@
   </p>
 
   {% if user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'onboarding' %}
+
+  <!-- "+" popup menu -->
+  <div id="nav-popup" onclick="event.stopPropagation()" style="display:none; position:fixed; bottom:76px; left:0; right:0; z-index:200; padding:0 1rem;">
+    <div style="max-width:480px; margin:0 auto; background:rgba(5,10,24,0.97); border:1px solid rgba(0,212,255,0.25); border-radius:16px; overflow:hidden; backdrop-filter:blur(24px); box-shadow:0 -4px 40px rgba(0,0,0,0.6);">
+      {% if request.user.profile.is_doctor %}
+        <a href="{% url 'doctor_dashboard' %}" style="display:flex; align-items:center; gap:0.75rem; padding:0.875rem 1.25rem; color:var(--text-primary); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.9375rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Bemor qo'shish
+        </a>
+        <a href="{% url 'doctor_simulation' 1 %}" style="display:flex; align-items:center; gap:0.75rem; padding:0.875rem 1.25rem; color:var(--text-primary); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.9375rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+          Dori simulyatsiyasi
+        </a>
+        <a href="{% url 'doctor_timeline' 1 %}" style="display:flex; align-items:center; gap:0.75rem; padding:0.875rem 1.25rem; color:var(--text-primary); text-decoration:none; font-size:0.9375rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+          Monitoring
+        </a>
+      {% else %}
+        <a href="{% url 'patient_checkin' %}" style="display:flex; align-items:center; gap:0.75rem; padding:0.875rem 1.25rem; color:var(--text-primary); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.9375rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Kunlik nazorat
+        </a>
+        <a href="{% url 'health_medications' %}" style="display:flex; align-items:center; gap:0.75rem; padding:0.875rem 1.25rem; color:var(--text-primary); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.9375rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 015 5v3H7V7a5 5 0 015-5z"/><rect x="3" y="10" width="18" height="12" rx="2"/></svg>
+          Dori qo'shish
+        </a>
+        <a href="{% url 'health_labs' %}" style="display:flex; align-items:center; gap:0.75rem; padding:0.875rem 1.25rem; color:var(--text-primary); text-decoration:none; font-size:0.9375rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-2 4h10l-2-4V2"/><line x1="9" y1="2" x2="15" y2="2"/></svg>
+          Qon tahlili
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
   <nav class="bottom-nav">
+
+    {% if request.user.profile.is_doctor %}
+
+    <a href="{% url 'doctor_dashboard' %}"
+       class="bottom-nav__item {% if request.resolver_match.url_name == 'doctor_dashboard' %}active{% endif %}">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span>Bosh</span>
+    </a>
+
+    <a href="{% url 'doctor_simulation' 1 %}"
+       class="bottom-nav__item {% if request.resolver_match.url_name == 'doctor_simulation' %}active{% endif %}">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        <polyline points="8,12 10,10 11,14 13,9 14,12 16,12" stroke="white" stroke-width="1.2"/>
+      </svg>
+      <span>Simulyatsiya</span>
+    </a>
+
+    <button type="button" id="nav-popup-btn"
+       class="bottom-nav__item"
+       style="position:relative; top:-14px; border:none; background:none; cursor:pointer; padding:0; display:flex; flex-direction:column; align-items:center; color:var(--text-dim); font-size:0.625rem; letter-spacing:0.05em; gap:0.2rem;">
+      <span style="width:56px; height:56px; background:radial-gradient(circle, #FF3B5C, #CC0033); border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(255,59,92,0.6), 0 0 40px rgba(255,59,92,0.3);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </span>
+      <span>Qo'shish</span>
+    </button>
+
+    <a href="{% url 'doctor_timeline' 1 %}"
+       class="bottom-nav__item {% if request.resolver_match.url_name == 'doctor_timeline' %}active{% endif %}">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+      </svg>
+      <span>Monitoring</span>
+    </a>
+
+    <a href="{% url 'profile' %}"
+       class="bottom-nav__item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <span>Profil</span>
+    </a>
+
+    {% else %}
 
     <a href="{% url 'dashboard' %}"
        class="bottom-nav__item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
@@ -42,12 +129,27 @@
     <a href="{% url 'twin' %}"
        class="bottom-nav__item {% if request.resolver_match.url_name == 'twin' %}active{% endif %}">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="8" cy="7" r="3"/>
-        <circle cx="16" cy="7" r="3"/>
-        <path d="M2 21c0-3.3 2.7-5 6-5h8c3.3 0 6 1.7 6 5"/>
+        <path d="M9 2 C9 6 15 8 15 12 C15 16 9 18 9 22"/>
+        <path d="M15 2 C15 6 9 8 9 12 C9 16 15 18 15 22" stroke-dasharray="2 1.5"/>
+        <line x1="9" y1="6" x2="15" y2="6" stroke-width="1" opacity="0.7"/>
+        <line x1="9" y1="10" x2="15" y2="10" stroke-width="1" opacity="0.7"/>
+        <line x1="9" y1="14" x2="15" y2="14" stroke-width="1" opacity="0.7"/>
+        <line x1="9" y1="18" x2="15" y2="18" stroke-width="1" opacity="0.7"/>
       </svg>
       <span>Twin</span>
     </a>
+
+    <button type="button" id="nav-popup-btn"
+       class="bottom-nav__item"
+       style="position:relative; top:-14px; border:none; background:none; cursor:pointer; padding:0; display:flex; flex-direction:column; align-items:center; color:var(--text-dim); font-size:0.625rem; letter-spacing:0.05em; gap:0.2rem;">
+      <span style="width:56px; height:56px; background:#00D4FF; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(0,212,255,0.4);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </span>
+      <span>Qo'shish</span>
+    </button>
 
     <a href="{% url 'analysis' %}"
        class="bottom-nav__item {% if request.resolver_match.url_name == 'analysis' %}active{% endif %}">
@@ -66,119 +168,26 @@
       <span>Profil</span>
     </a>
 
-    <a href="{% url 'alerts_view' %}"
-       class="bottom-nav__item {% if request.resolver_match.url_name == 'alerts_view' %}active{% endif %}"
-       style="position:relative;">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
-        <path d="M13.73 21a2 2 0 01-3.46 0"/>
-      </svg>
-      {% if unread_alerts_count > 0 %}
-        <span style="position:absolute; top:2px; right:10px; min-width:15px; height:15px; border-radius:8px; background:#FF3B5C; font-size:8px; font-weight:700; color:#fff; display:flex; align-items:center; justify-content:center; padding:0 3px; line-height:1;">{{ unread_alerts_count }}</span>
-      {% endif %}
-      <span>Xabar</span>
-    </a>
-
-    <button id="plusBtn" onclick="togglePlusMenu()" class="bottom-nav__item" style="background:none;border:none;cursor:pointer;">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="9"/>
-        <line x1="12" y1="8" x2="12" y2="16"/>
-        <line x1="8" y1="12" x2="16" y2="12"/>
-      </svg>
-      <span>Qo'shish</span>
-    </button>
+    {% endif %}
 
   </nav>
 
-  <!-- Plus menu popup -->
-  <div id="plusMenu" style="
-    display: none;
-    position: fixed;
-    bottom: 72px;
-    right: 0;
-    left: 0;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    z-index: 200;
-  ">
-    <div style="
-      background: #0D1426;
-      border: 1px solid rgba(0,212,255,0.2);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
-    ">
-      {% if request.user.profile.is_doctor %}
-      <a href="{% url 'doctor_dashboard' %}" onclick="closePlusMenu()" style="
-        display: flex; align-items: center; gap: 0.75rem;
-        padding: 0.9rem 1.1rem;
-        text-decoration: none; color: var(--text-primary);
-      ">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
-        </svg>
-        <span style="font-size:0.9375rem; font-weight:500;">Monitoring</span>
-      </a>
-      {% else %}
-      <a href="{% url 'health_medications' %}" onclick="closePlusMenu()" style="
-        display: flex; align-items: center; gap: 0.75rem;
-        padding: 0.9rem 1.1rem;
-        text-decoration: none; color: var(--text-primary);
-        border-bottom: 1px solid rgba(255,255,255,0.06);
-      ">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="4"/>
-          <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="12" y1="3" x2="12" y2="10"/>
-          <line x1="12" y1="14" x2="12" y2="21"/>
-        </svg>
-        <span style="font-size:0.9375rem; font-weight:500;">Dorilar</span>
-      </a>
-      <a href="{% url 'health_labs' %}" onclick="closePlusMenu()" style="
-        display: flex; align-items: center; gap: 0.75rem;
-        padding: 0.9rem 1.1rem;
-        text-decoration: none; color: var(--text-primary);
-        border-bottom: 1px solid rgba(255,255,255,0.06);
-      ">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2C6 8 4 12 4 15a8 8 0 0016 0c0-3-2-7-8-13z"/>
-        </svg>
-        <span style="font-size:0.9375rem; font-weight:500;">Qon tahlili</span>
-      </a>
-      <a href="{% url 'patient_checkin' %}" onclick="closePlusMenu()" style="
-        display: flex; align-items: center; gap: 0.75rem;
-        padding: 0.9rem 1.1rem;
-        text-decoration: none; color: var(--text-primary);
-      ">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-          <line x1="12" y1="14" x2="16" y2="14"/>
-        </svg>
-        <span style="font-size:0.9375rem; font-weight:500;">Kunlik nazorat</span>
-      </a>
-      {% endif %}
-    </div>
-  </div>
-
   <script>
-    function togglePlusMenu() {
-      var m = document.getElementById('plusMenu');
-      m.style.display = m.style.display === 'none' ? 'block' : 'none';
-    }
-    function closePlusMenu() {
-      document.getElementById('plusMenu').style.display = 'none';
-    }
-    document.addEventListener('click', function(e) {
-      if (!document.getElementById('plusBtn').contains(e.target) &&
-          !document.getElementById('plusMenu').contains(e.target)) {
-        closePlusMenu();
+    (function() {
+      var btn = document.getElementById('nav-popup-btn');
+      var popup = document.getElementById('nav-popup');
+      if (btn && popup) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+        });
+        document.addEventListener('click', function() {
+          popup.style.display = 'none';
+        });
       }
-    });
+    })();
   </script>
+
   {% endif %}
 
   {% block extra_js %}{% endblock %}
