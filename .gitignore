@@ -24,3 +24,4 @@ local_settings.py
 # IDE
 .vscode/
 .idea/
+.DS_Store
